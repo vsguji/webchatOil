@@ -9,6 +9,6 @@ public class WellcomeAction extends ActionSupport{
 
 	public String execute() throws Exception{
 		System.out.println("WellcomeAction...");
-		return "success";
+		return "input";
 	}
 }

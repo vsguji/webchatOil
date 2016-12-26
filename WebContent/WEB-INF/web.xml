@@ -18,6 +18,12 @@
         <param-value>/WEB-INF/applicationContext.xml</param-value>
     </context-param>
     
+ <!-- log4j日志工具的配置 -->
+    <context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>/WEB-INF/classes/log4j.properties</param-value>
+    </context-param>   
+    
     <!-- 开启监听 -->
     <listener>
         <listener-class>
@@ -32,10 +38,13 @@
            org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter
         </filter-class>
     </filter>
-    
+ <!--注意：千万不能写成：*.action ，如果需要：*.action应该配置在struts.xml中-->  
  <filter-mapping>
   <filter-name>struts2</filter-name>
-  <url-pattern>/*</url-pattern>                         <!--注意：千万不能写成：*.action ，如果需要：*.action应该配置在struts.xml中-->
+  <url-pattern>/*</url-pattern>   
+  <!-- 拦截请求转发 -->
+  <dispatcher>REQUEST</dispatcher> 
+  <dispatcher>FORWARD</dispatcher>                       
  </filter-mapping>
  
 </web-app>    

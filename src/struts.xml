@@ -4,14 +4,13 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"  
     "http://struts.apache.org/dtds/struts-2.0.dtd">  
     
-<struts>
-<!-- 改变url现实的后缀,默认是action --> 
-<constant name="struts.action.extension" value="xhtml" /> 
-
-<package name="front" namespace = "/front" extends="struts-default">
-     <action name ="index" class="com.webchatOil.action.WellcomeAction">
-     <result name = "success">/index.jsp</result>
-     </action>
-</package>
-
-</struts>
+<struts> 
+<package name="default" extends="struts-default"> 
+    <action name="wellcome" class="com.webchatOil.action.WellcomeAction"> 
+     <result name="input">login.jsp</result> 
+     <result name="success">success.jsp</result> 
+    </action> 
+</package> 
+</struts> 
+    
+    

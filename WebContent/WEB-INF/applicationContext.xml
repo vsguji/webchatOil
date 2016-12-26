@@ -11,6 +11,12 @@
 	 http://www.springframework.org/schema/mvc
 	 http://www.springframework.org/schema/mvc/spring-mvc.xsd"
 	 >
-	<mvc:default-servlet-handler/>
-	
+<!-- 定义dataSource --> 
+<!-- 定义sessionFactory , 这里要加hibernate的数据库表的映射文件***.hbm.xml --> 
+<!-- 事务管理 --> 
+<!-- 事务拦截器 --> 
+<!-- 业务实例动态代理 --> 
+<!-- 定义业务处理bean --> 
+
+
 </beans>
