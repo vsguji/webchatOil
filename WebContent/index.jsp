@@ -10,5 +10,6 @@
 </head>
 <body>
 <a>hello</a>
+<jsp:forward page="login.jsp"></jsp:forward>
 </body>
 </html>
