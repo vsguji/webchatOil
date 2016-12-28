@@ -1,7 +1,7 @@
 package com.webchatOil.action;
 import com.opensymphony.xwork2.ActionSupport;
 
-public class WellcomeAction extends ActionSupport{
+public class WelcomeAction extends ActionSupport{
 	/**
 	 * 
 	 */

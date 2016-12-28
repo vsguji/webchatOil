@@ -5,9 +5,15 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">  
     
 <struts> 
-<package name="default" extends="struts-default"> 
-    <action name="wellcome" class="com.webchatOil.action.WellcomeAction"> 
-     <result name="input">login.jsp</result> 
+    <constant name="struts.server.static.browserCache" value="false" />
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<constant name="struts.multipart.maxSize" value="1073741824" />
+<package name="welcome" extends="struts-default"> 
+    <action name="welcome" class="com.webchatOil.action.WelcomeAction"> 
+     <result name="input">/jsp/error.jsp</result> 
      <result name="success">success.jsp</result> 
     </action> 
 </package> 

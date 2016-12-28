@@ -9,7 +9,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<a>hello</a>
-<jsp:forward page="login.jsp"></jsp:forward>
+<jsp:forward page="/jsp/index.html" />
 </body>
 </html>

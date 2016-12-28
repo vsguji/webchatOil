@@ -9,7 +9,7 @@
 
 <!-- struts2 结构不在有效，可以借助servlet 解决 -->
     <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>chatOil.jsp</welcome-file>
     </welcome-file-list>
     
  <!-- 配置spring的监听器 -->
@@ -37,7 +37,12 @@
         <filter-class>
            org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter
         </filter-class>
-    </filter>
+         <init-param>
+         <param-name>config init struts.xml</param-name>
+         <param-value>struts.xml</param-value>
+         </init-param>
+ </filter>
+    
  <!--注意：千万不能写成：*.action ，如果需要：*.action应该配置在struts.xml中-->  
  <filter-mapping>
   <filter-name>struts2</filter-name>
