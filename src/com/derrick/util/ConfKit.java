@@ -18,15 +18,15 @@ public class ConfKit {
 	static {
 		try {
 			//play框架下要用这种方式加载
-			props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("/wechat.properties"));
-			//props.load(ConfKit.class.getResourceAsStream("/wechat.properties"));
+			//props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("/wechat.properties"));
+			props.load(ConfKit.class.getResourceAsStream("/WebContent/WEB-INF/classes/wechat.properties"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+     
 	public static String get(String key) {
 		return props.getProperty(key);
 	}

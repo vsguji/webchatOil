@@ -4,10 +4,15 @@ import com.derrick.util.Tools;
 
 import org.apache.log4j.Logger;
 
+import java.util.Properties;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -21,7 +26,10 @@ import java.io.IOException;
 public class WeChatFilter implements Filter {
 
     private final Logger LOGGER = Logger.getLogger(WeChatFilter.class);
-
+    private String			conf			= "classPath:wechat.properties";
+    private String			defaultHandler	= "com.derrick.MessageProcessingHandlerImpl";
+	private Properties		p;
+    
     @Override
     public void destroy() {
         LOGGER.info("WeChatFilter已经销毁");
@@ -71,7 +79,24 @@ public class WeChatFilter implements Filter {
 
     @Override
     public void init(FilterConfig config) throws ServletException {
-        LOGGER.info("WeChatFilter已经启动！");
+    	String cf = config.getInitParameter("conf");
+		if (cf != null) {
+			conf = cf;
+		}
+		String classPath = this.getClass().getResource("/").getPath().replaceAll("%20", " ");
+		conf = conf.replace("classPath:", classPath);
+		p = new Properties();
+		File pfile = new File(conf);
+		if (pfile.exists()) {
+			try {
+				p.load(new FileInputStream(pfile));
+			} catch (FileNotFoundException e) {
+				LOGGER.error("未找到wechat.properties", e);
+			} catch (IOException e) {
+				LOGGER.error("wechat.properties读取异常", e);
+			}
+		}
+		LOGGER.info("WeChatFilter已经启动！");
     }
 
 }

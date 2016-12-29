@@ -9,6 +9,7 @@ import com.derrick.domain.OutMessage;
 import com.derrick.impl.MessageProcessingHandler;
 import com.derrick.oauth.*;
 import com.derrick.util.*;
+import com.derrick.util.ConfKit;
 import com.thoughtworks.xstream.XStream;
 
 import org.apache.commons.lang.StringUtils;
