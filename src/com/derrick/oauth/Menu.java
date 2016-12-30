@@ -30,6 +30,7 @@ public class Menu {
 	public boolean createMenu(String accessToken,String params) throws InterruptedException, ExecutionException, IOException {
         String jsonStr = HttpKit.post("https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + accessToken, params);
         Map<String, Object> map = JSON.parseObject(jsonStr,Map.class);
+        System.out.println(jsonStr);
         return "0".equals(map.get("errcode").toString());
     }
     

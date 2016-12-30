@@ -55,6 +55,7 @@ public class WeChatFilter implements Filter {
         String xmlMsg = Tools.inputStream2String(in);
         LOGGER.debug("输入消息:[" + xmlMsg + "]");
         String xml = WeChat.processing(xmlMsg);
+        LOGGER.debug("回复消息:[" + xml + "]");
         response.getWriter().write(xml);
     }
 

@@ -6,11 +6,14 @@ import com.derrick.domain.Articles;
 import com.derrick.domain.Attachment;
 import com.derrick.domain.InMessage;
 import com.derrick.domain.OutMessage;
+import com.derrick.domain.TextOutMessage;
 import com.derrick.impl.MessageProcessingHandler;
 import com.derrick.oauth.*;
 import com.derrick.util.*;
-import com.derrick.util.ConfKit;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
+import freemarker.log.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -26,6 +29,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
@@ -41,7 +45,7 @@ import java.util.regex.Pattern;
 public class WeChat {
     private static final String ACCESSTOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
     private static final String PAYFEEDBACK_URL = "https://api.weixin.qq.com/payfeedback/update";
-    private static final String DEFAULT_HANDLER = "com.gson.inf.DefaultMessageProcessingHandlerImpl";
+    private static final String DEFAULT_HANDLER = "com.derrick.impl.DefaultMessageProcessingHandlerImpl";
     private static final String GET_MEDIA_URL = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=";
     private static final String UPLOAD_MEDIA_URL = "http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=";
     private static final String JSAPI_TICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=";
@@ -133,6 +137,7 @@ public class WeChat {
      * @return
      */
     public static String processing(String responseInputString) {
+    	System.out.println("接收到的消息:" + responseInputString);
         InMessage inMessage = parsingInMessage(responseInputString);
         OutMessage oms = null;
         // 加载处理器
@@ -181,11 +186,14 @@ public class WeChat {
             throw new RuntimeException(e);
         }
         if (oms != null) {
-            // 把发送发送对象转换为xml输出
-            XStream xs = XStreamFactory.init(true);
+            // 把发送对象转换为xml输出
+        	XStream xs = XStreamFactory.init(true);
+        	// 自动解析注解
+        	xs.autodetectAnnotations(true);
             xs.alias("xml", oms.getClass());
             xs.alias("item", Articles.class);
             xml = xs.toXML(oms);
+           System.out.println("输出消息1:["+xml+"]");
         }
         return xml;
     }

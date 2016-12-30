@@ -17,6 +17,12 @@ public class Articles implements Serializable{
 	private String PicUrl;
 	private String Url;
 	
+	public Articles(String Title,String Description,String PicUrl,String Url){    
+        this.Title=Title;    
+        this.Description=Description;    
+        this.PicUrl=PicUrl;  
+        this.Url=Url;
+    }  
 	public String getTitle() {
 		return Title;
 	}

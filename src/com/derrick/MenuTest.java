@@ -28,9 +28,9 @@ public static final String URL_ACCESSTOKEN = "https://api.weixin.qq.com/cgi-bin/
 		Data4Button btn = new Data4Button();
 
 		// 创建一级菜单
-		Data4Menu menu1 = new Data4Menu("view", "关于柚米", "http://yomi8.com/about/");
-		Data4Menu menu2 = new Data4Menu("view", "柚米注册", "http://yomi8.com/youmi/register.html");  
-		Data4Menu menu3 = new Data4Menu("click", "下载柚米", "Btn_5"); 
+		Data4Menu menu1 = new Data4Menu("view", "关于柚米01", "http://yomi8.com/about/");
+		Data4Menu menu2 = new Data4Menu("view", "柚米注册01", "http://yomi8.com/youmi/register.html");  
+		Data4Menu menu3 = new Data4Menu("click", "下载柚米01", "Btn_5"); 
 
 		// 菜单之间的关系
 		btn.addMenu(menu1); 
