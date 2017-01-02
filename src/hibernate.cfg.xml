@@ -1,28 +1,56 @@
-<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE hibernate-configuration PUBLIC
-"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
-<hibernate-configuration>
-<session-factory>
-<!-- Database connection settings -->
-<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-<property name="connection.url">jdbc:mysql://localhost:3306/webchatOilDB</property>
-<property name="connection.username">root</property>
-<property name="connection.password">123</property>
-<!-- JDBC connection pool (use the built-in) -->
-<property name="connection.pool_size">10</property>
-<!-- SQL dialect -->
-<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-<!-- Enable Hibernate's automatic session context management -->
-<property name="current_session_context_class">thread</property>
-<!-- Disable the second-level cache -->
-<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
-<!-- Echo all executed SQL to stdout -->
-<property name="show_sql">true</property>
-<property name="format_sql">true</property>
-<!-- Drop and re-create the database schema on startup -->
-<property name="hbm2ddl.auto">update</property>
-<mapping resource="com/model/User.hbm.xml"/>
-<!-- <mapping class="com.model.User"/>-->
-</session-factory>
-</hibernate-configuration>
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context.xsd  
+        http://www.springframework.org/schema/aop  
+        http://www.springframework.org/schema/aop/spring-aop.xsd  
+        http://www.springframework.org/schema/tx  
+        http://www.springframework.org/schema/tx/spring-tx.xsd">  
+  
+    <!-- C3P0 数据源 -->  
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">  
+        <property name="driverClass" value="${hibernate.connection.driver_class}" />  
+        <property name="jdbcUrl" value="${hibernate.connection.url}" />  
+        <property name="user" value="${hibernate.connection.username}" />  
+        <property name="password" value="${hibernate.connection.password}" />  
+        <property name="initialPoolSize" value="${hibernate.connection.initialPoolSize}" />  
+        <property name="minPoolSize" value="${hibernate.connection.minPoolSize}" />  
+        <property name="maxPoolSize" value="${hibernate.connection.maxPoolSize}" />  
+        <!-- <property name="preferredTestQuery" value="select 1 from dual " />  --> 
+    </bean>  
+  
+    <!-- SessionFactory -->  
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource" />  
+        <property name="packagesToScan" value="com.webchatOi.dao.*.po" />  
+        <property name="useTransactionAwareDataSource" value="true" />  
+        <property name="hibernateProperties">  
+            <props>  
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>  
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>  
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>  
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">${hibernate.temp.use_jdbc_metadata_defaults}</prop>  
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>  
+                <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>  
+                <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>  
+                <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>  
+                <prop key="hibernate.connection.autocommit">false</prop>  
+                <prop key="hibernate.current_session_context_class">thread</prop>  
+            </props>  
+        </property>  
+    </bean>  
+  
+    <!-- 配置事务管理 -->  
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">  
+        <property name="sessionFactory" ref="sessionFactory" />  
+    </bean>  
+  
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">  
+        <property name="sessionFactory" ref="sessionFactory" />  
+    </bean>  
+  
+    <aop:aspectj-autoproxy />  
+    <tx:annotation-driven />  
+</beans>
