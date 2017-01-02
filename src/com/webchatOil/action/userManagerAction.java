@@ -41,7 +41,7 @@ public class userManagerAction extends BaseAction {
 	/**
 	 * 删除用户
 	 */
-	public void removeOlderUser(Userinfo oldUser){
+	public void doRemoveOlderUser(Userinfo oldUser){
 		
 	}
 	

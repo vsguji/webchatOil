@@ -21,7 +21,21 @@
      <action name="doGet" class="com.webchatOil.action.activtiyAction" method="doGet"></action>
      <action name="recAuthAction" class="com.webchatOil.action.activtiyAction" method="recAuthAction"></action>
  <!-- 微信乐淘用户管理 -->
-     
+       <action name="doCheckUser" class="com.webchatOil.action.userManagerAction" method="doCheckUser"></action>
+       <action name="doGetUser" class="com.webchatOil.action.userManagerAction" method="doGetUser"></action>
+       <action name="doGetUserWithElment" class="com.webchatOil.action.userManagerAction" method="doGetUserWithElment"></action>
+       <action name="doRegsisterUser" class="com.webchatOil.action.userManagerAction" method="doRegsisterUser"></action>
+       <action name="doRemoveOlderUser" class="com.webchatOil.action.userManagerAction" method="doRemoveOlderUser"></action>
+ <!-- 微信乐淘留言管理  -->
+      <action name="doCommitAdvice" class="com.webchatOil.action.advicesManagerAction" method="doCommitAdvice"></action>
+      <action name="doFoundAdvices" class="com.webchatOil.action.advicesManagerAction" method="doFoundAdvices"></action>
+      <action name="doAdvicesNextPage" class="com.webchatOil.action.advicesManagerAction" method="doAdvicesNextPage"></action>
+      <action name="doAdvicesPrePage" class="com.webchatOil.action.advicesManagerAction" method="doAdvicesPrePage"></action> 
+      <action name="doHelp" class="com.webchatOil.action.advicesManagerAction" method="doHelp"></action>
+ <!-- 微信乐淘供求信息管理 -->
+     <action name="doHelp" class="com.webchatOil.action.advicesManagerAction" method="doHelp"></action>
+ <!-- 微信乐淘粮食购销管理 -->
+	 <action name="doHelp" class="com.webchatOil.action.advicesManagerAction" method="doHelp"></action>	 
 </package> 
 </struts> 
     

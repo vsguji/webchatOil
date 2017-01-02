@@ -16,7 +16,7 @@ public class Userinfo implements java.io.Serializable {
 	private String username;
 	private String password;
 	private String imageheadurl;
-	private Integer level;
+	private Integer level; // 0 默认级别 admin 
 	private String registertime;
 	private String reserve1;
 	private String reserve2;

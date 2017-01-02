@@ -100,16 +100,18 @@ public class activtiyAction extends BaseAction {
 			 System.out.println("no");
 		 }
 		 if (code != null && code.length() > 0) {
-			 if (createAuthOauth.accessToken == null) {
-				 String accessTokenString = createAuthOauth.getToken(code);
-				  createAuthOauth.setAccessToken(accessTokenString);
-			 }
-			 else if (createAuthOauth.accessToken.isExpire()) { 
-				 System.out.println("token 过期");
-				 String oauthURlString = createAuthOauth.getCode();
-				 response.sendRedirect(oauthURlString);
-				 return;
-			 }
+//			 if (createAuthOauth.accessToken == null) {
+//				 String accessTokenString = createAuthOauth.getToken(code);
+//				  createAuthOauth.setAccessToken(accessTokenString);
+//			 }
+//			 else if (createAuthOauth.accessToken.isExpire()) { 
+//				 System.out.println("token 过期");
+//				 String oauthURlString = createAuthOauth.getCode();
+//				 response.sendRedirect(oauthURlString);
+//				 return;
+			   String accessTokenString = createAuthOauth.getToken(code);
+			    createAuthOauth.setAccessToken(accessTokenString);
+//			 }
 			 // 这个地方 accessToken 问题：上面 accessTokenString 里面是从网页授权获取一个accessToken
 			 // 获取用户基本信息 是用普通的 accessToken
 			 String accessTokenNormal = WeChat.getAccessToken();

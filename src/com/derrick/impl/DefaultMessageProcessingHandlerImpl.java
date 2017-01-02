@@ -6,11 +6,7 @@
 package com.derrick.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.derrick.WeChat;
 import com.derrick.domain.Articles;
@@ -56,7 +52,7 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 		else if (msgContentString.contains("通知") == true) {
 			try {
 				 String accessTokenNormal = WeChat.getAccessToken();
-				 TemplateData tempData = new TemplateData("", "");
+				 TemplateData tempData = new TemplateData(msg.getFromUserName(), "");
 				  WeChat.message.templateSend(accessTokenNormal, tempData);
 				} catch (Exception e) {
 					// TODO: handle exception

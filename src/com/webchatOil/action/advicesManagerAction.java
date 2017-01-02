@@ -40,7 +40,7 @@ public class advicesManagerAction extends BaseAction {
 	/**
 	 * 辅助用户提交信息
 	 */
-	public doHelp(){
-		
+	public String doHelp(){
+		return null;
 	}
 }
