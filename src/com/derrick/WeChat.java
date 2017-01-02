@@ -71,7 +71,12 @@ public class WeChat {
      * 分组操作接口
      */
     public static final Qrcod qrcod = new Qrcod(); 
-
+     
+    /**
+     *  新添加 "网页授权获取用户基本信息"接口
+     */
+    public static final Oauth webAuth = new Oauth();
+    
     /**
      * 获取access_token
      *
@@ -152,10 +157,12 @@ public class WeChat {
             }
         }
         String xml = "";
+        String type = "";
         try {
             MessageProcessingHandler messageProcessingHandler = (MessageProcessingHandler) messageProcessingHandlerClazz.newInstance();
             //取得消息类型
-            String type = inMessage.getMsgType();
+             type = inMessage.getMsgType();
+            System.out.println("接收到的消息类型" + type);
             Method getOutMessage = messageProcessingHandler.getClass().getMethod("getOutMessage");
             Method alMt = messageProcessingHandler.getClass().getMethod("allType", InMessage.class);
             Method mt = messageProcessingHandler.getClass().getMethod(type + "TypeMsg", InMessage.class);

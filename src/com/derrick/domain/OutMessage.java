@@ -1,21 +1,13 @@
 package com.derrick.domain;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-
-@XStreamAlias ( "xml" )
 public class OutMessage {
-	
-	@XStreamAlias ( "ToUserName" )
+
 	private String	ToUserName;
-	
-	@XStreamAlias ( "FromUserName" )
+
 	private String	FromUserName;
 	
-	@XStreamAlias ( "CreateTime" )
 	private Long	CreateTime;
-	
-	@XStreamAlias ( "FuncFlag" )
+
 	private int		FuncFlag	= 0;
 
 	public String getToUserName() {

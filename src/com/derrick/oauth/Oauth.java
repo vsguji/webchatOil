@@ -2,14 +2,20 @@ package com.derrick.oauth;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.derrick.util.ConfKit;
 import com.derrick.util.HttpKit;
+import com.webchatOil.util.JsonUtils;
+
+import net.sf.json.JSONObject;
 /**
  * 
 * @ClassName: Oauth 
@@ -26,14 +32,16 @@ public class Oauth {
 
     private String appid;
     private String secret;
-
+  
+    public static WebAccessToken accessToken;
+    
     public Oauth() {
         super();
         this.appid = ConfKit.get("AppId");
         this.secret = ConfKit.get("AppSecret");
     }
-
-    public Oauth(String appid, String secret) {
+    
+	public Oauth(String appid, String secret) {
         super();
         this.appid = appid;
         this.secret = secret;
@@ -48,10 +56,10 @@ public class Oauth {
         Map<String, String> params = new HashMap<String, String>();
         params.put("appid", getAppid());
         params.put("response_type", "code");
-        params.put("redirect_uri", ConfKit.get("redirect_uri"));
-        params.put("scope", "snsapi_base"); // snsapi_base（不弹出授权页面，只能拿到用户openid）snsapi_userinfo
+        params.put("redirect_uri", URLEncoder.encode(ConfKit.get("redirect_uri"), "UTF-8"));
+        params.put("scope", "snsapi_userinfo"); // snsapi_base（不弹出授权页面，只能拿到用户openid）snsapi_userinfo
         // （弹出授权页面，这个可以通过 openid 拿到昵称、性别、所在地）
-        params.put("state", "wx#wechat_redirect");
+        params.put("state", "STATE#wechat_redirect");
         String para = Pay.createSign(params, false);
         return CODE_URI + "?" + para;
     }
@@ -105,5 +113,38 @@ public class Oauth {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+    
+    
+    /**
+     * access_token map 转 javaBean
+     */
+    public void setAccessToken(String token){
+    	JSONObject object =JSONObject.fromObject(token);
+    	WebAccessToken tokenObj = (WebAccessToken)JSONObject.toBean(object, WebAccessToken.class);
+    	// 存储json 到本地
+    	String path = localPath();
+    	JsonUtils.writeJson(path, token, "token");
+    	accessToken = tokenObj;
+    }
+   
+    /**
+     * 本地json 转 javaBean
+     * @return
+     */
+    public static WebAccessToken getSaveToken(){
+    	String path = localPath();
+    	path += "token.json";
+    	String savedObj = JsonUtils.readJson(path);
+    	JSONObject object = new JSONObject();
+    	WebAccessToken tokenObj = (WebAccessToken)JSONObject.toBean(object, WebAccessToken.class);
+		return tokenObj;
+    }
+    
+    /**
+     * 当前资源路径
+     */
+    public static String localPath(){
+    	return "d:\\";
     }
 }

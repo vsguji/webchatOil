@@ -11,12 +11,11 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 * @date 2015年1月21日 下午2:46:02 
 *
  */
-@XStreamAlias ( "xml" )
+
 public class TextOutMessage extends OutMessage {
-	@XStreamAlias("MsgType")
+
 	private String	MsgType	= "text";
 	// 文本消息
-	@XStreamAlias("Content")
 	private String	Content;
 	
 	public TextOutMessage() {

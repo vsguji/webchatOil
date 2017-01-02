@@ -19,6 +19,9 @@
     </action> 
  <!-- 微信授权管理  -->
      <action name="doGet" class="com.webchatOil.action.activtiyAction" method="doGet"></action>
+     <action name="recAuthAction" class="com.webchatOil.action.activtiyAction" method="recAuthAction"></action>
+ <!-- 微信乐淘用户管理 -->
+     
 </package> 
 </struts> 
     

@@ -16,13 +16,10 @@ public class Articles implements Serializable{
 	private String Description;
 	private String PicUrl;
 	private String Url;
-	
-	public Articles(String Title,String Description,String PicUrl,String Url){    
-        this.Title=Title;    
-        this.Description=Description;    
-        this.PicUrl=PicUrl;  
-        this.Url=Url;
-    }  
+
+	public Articles() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getTitle() {
 		return Title;
 	}
