@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 //数据存储层通用DAO接口定义
-@Repository
+
 public interface GeneralDao {
 
 	 public <T> T findById(Class<T> type, Serializable id);  
