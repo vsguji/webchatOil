@@ -1,16 +1,17 @@
-package com.webchatOil.impl;  
+package com.webchatOil.dao;  
   
 import java.io.Serializable;  
 import java.util.List;  
   
 
+
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.orm.hibernate3.HibernateTemplate;  
 import org.springframework.stereotype.Repository;  
-
-import com.webchatOil.dao.GeneralDao;
   
-@Repository  
+//DAO的实现类
+
+@Repository("GeneralDao")  
 public class GeneralDAOImpl implements GeneralDao {  
   
     @Autowired  

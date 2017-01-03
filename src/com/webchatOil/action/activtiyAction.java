@@ -1,40 +1,49 @@
 package com.webchatOil.action;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.WebConnection;
 
-import org.apache.commons.lang.ObjectUtils.Null;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 
+import org.apache.log4j.Logger;
 import com.webchatOil.action.BaseAction;
+import com.webchatOil.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.derrick.WeChatFilter;
 import com.derrick.WeChat;
 import com.derrick.domain.Data4Button;
 import com.derrick.domain.Data4Menu;
-import com.derrick.domain.InMessage;
 import com.derrick.domain.UserInfo;
 import com.derrick.oauth.Menu;
 import com.derrick.oauth.Oauth;
-import com.derrick.oauth.Pay;
 import com.derrick.oauth.User;
-import com.derrick.oauth.WebAccessToken;
 import com.derrick.util.ConfKit;
-import com.derrick.util.HttpKit;
-import com.derrick.util.Tools;
+
+
+//Spring注解@Scope("prototype")
+//Spring在Action上面注解@Scope("prototype")
+//
+//表示每次接收一个请求创建一个Action对象..
+//
+//如若改成其他,例如单例模式,则很多请求公用同一个Action.
+//
+//一个注册的例子,如果没加上这个注解,注册完成后,下一个请求再注册一次,Action里会保留上一次注册的信息..
+// 保证线程安全
+
 
 public class activtiyAction extends BaseAction {
 	private static final long serialVersionUID = 3321845277376234101L;
 	private static WeChatFilter filter = new WeChatFilter();
 	HttpServletRequest request = getRequest();
 	HttpServletResponse response = getResponse();
+	@Autowired // @Autowired可以对成员变量、方法和构造函数进行标注，来完成自动装配的工作
+    private UserService userService;
+	private Logger logger = Logger.getLogger(activtiyAction.class);
 	/*
 	 * 服务器认证
 	 */
+	//@Scope("prototype")
 	public void doGet() throws Exception{
 		
 		// 接口配置
@@ -51,6 +60,7 @@ public class activtiyAction extends BaseAction {
 	/*
 	 * 创建自定义菜单
 	 */
+	//@Scope("prototype")
 	public void setupMenu() throws Exception{
 		// 自定义菜单
 	   String accessToken = WeChat.getAccessToken();
@@ -90,6 +100,7 @@ public class activtiyAction extends BaseAction {
 	/*
 	 * 网页授权
 	 */
+	//@Scope("prototype")
 	 public void recAuthAction() throws Exception{
 		 String code = request.getParameter("code");
 		 Oauth createAuthOauth = WeChat.webAuth;

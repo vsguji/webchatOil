@@ -15,8 +15,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import freemarker.log.Logger;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.servlet.http.HttpServletRequest;
 

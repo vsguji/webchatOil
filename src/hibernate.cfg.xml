@@ -22,9 +22,9 @@
     </bean>  
   
     <!-- SessionFactory -->  
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">  
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">  
         <property name="dataSource" ref="dataSource" />  
-        <property name="packagesToScan" value="com.webchatOi.dao.*.po" />  
+        <property name="packagesToScan" value="com.webchatOi.model" />  <!-- 实体类的包 -->
         <property name="useTransactionAwareDataSource" value="true" />  
         <property name="hibernateProperties">  
             <props>  
@@ -50,7 +50,9 @@
     <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">  
         <property name="sessionFactory" ref="sessionFactory" />  
     </bean>  
-  
+   <!-- 开始事务管理注解  -->
+   <!-- 支持 @aspectj 标签注解 -->
     <aop:aspectj-autoproxy />  
+    <!-- 支持注解 -->
     <tx:annotation-driven />  
 </beans>

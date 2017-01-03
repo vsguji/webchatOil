@@ -7,7 +7,11 @@
          http://www.springframework.org/schema/context   
          http://www.springframework.org/schema/context/spring-context-3.0.xsd">  
     <context:annotation-config />  
-    <context:component-scan base-package="com.webchatOil.dao" />  
+    <!-- 自动扫描注解包 -->
+    <context:component-scan base-package="com.webchatOil.dao" /> 
+    <context:component-scan base-package="com.webchatOil.action" /> 
+    <context:component-scan base-package="com.webchatOil.model" />
+    <context:component-scan base-package="com.webchatOil.service" />
     <context:property-placeholder location="classpath:hibernate.properties"/>  
     <import resource="classpath:hibernate.cfg.xml"/>  
 </beans>  

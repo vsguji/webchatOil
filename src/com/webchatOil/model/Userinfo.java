@@ -7,7 +7,6 @@ package com.webchatOil.model;
 public class Userinfo implements java.io.Serializable {
 
 	// Fields
-
 	/**
 	 * 
 	 */
