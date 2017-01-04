@@ -96,7 +96,7 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 			break;
 		case "subscribe": // 订阅频道
 			TextOutMessage out = new TextOutMessage();
-			out.setContent("感谢您的关注，机器人༺乐淘༻为你服务.");
+			out.setContent("感谢您的关注,༺乐淘༻为你服务.");
 			setOutMessage(out);
 			break;
 		case "unsubscribe":// 取消订阅频道  删除历史消息

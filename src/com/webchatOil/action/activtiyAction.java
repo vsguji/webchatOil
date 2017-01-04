@@ -40,10 +40,11 @@ public class activtiyAction extends BaseAction {
 	@Autowired // @Autowired可以对成员变量、方法和构造函数进行标注，来完成自动装配的工作
     private UserService userService;
 	private Logger logger = Logger.getLogger(activtiyAction.class);
+	private int recAuthorTime = 0;
 	/*
 	 * 服务器认证
 	 */
-	//@Scope("prototype")
+
 	public void doGet() throws Exception{
 		
 		// 接口配置
@@ -60,12 +61,13 @@ public class activtiyAction extends BaseAction {
 	/*
 	 * 创建自定义菜单
 	 */
-	//@Scope("prototype")
+	
 	public void setupMenu() throws Exception{
 		// 自定义菜单
 	   String accessToken = WeChat.getAccessToken();
 	    Menu menu = WeChat.menu; 
-	   String path = request.getContextPath();
+//	   String path = request.getContextPath() + "/"; 
+	    String path = "http://ced98a0d.ngrok.io/webchatOil/";
 	   // 创建按钮
 	   Data4Button btn = new Data4Button();
 	   // 创建一级菜单
@@ -100,7 +102,7 @@ public class activtiyAction extends BaseAction {
 	/*
 	 * 网页授权
 	 */
-	//@Scope("prototype")
+
 	 public void recAuthAction() throws Exception{
 		 String code = request.getParameter("code");
 		 Oauth createAuthOauth = WeChat.webAuth;
@@ -110,19 +112,19 @@ public class activtiyAction extends BaseAction {
 		 else {
 			 System.out.println("no");
 		 }
-		 if (code != null && code.length() > 0) {
-//			 if (createAuthOauth.accessToken == null) {
-//				 String accessTokenString = createAuthOauth.getToken(code);
-//				  createAuthOauth.setAccessToken(accessTokenString);
-//			 }
-//			 else if (createAuthOauth.accessToken.isExpire()) { 
-//				 System.out.println("token 过期");
-//				 String oauthURlString = createAuthOauth.getCode();
-//				 response.sendRedirect(oauthURlString);
-//				 return;
-			   String accessTokenString = createAuthOauth.getToken(code);
-			    createAuthOauth.setAccessToken(accessTokenString);
-//			 }
+		 if (code != null) {
+			 if (createAuthOauth.accessToken == null) {
+				 String accessTokenString = createAuthOauth.getToken(code);
+				  createAuthOauth.setAccessToken(accessTokenString);
+				  recAuthorTime = 0;
+			 }
+			 else if (createAuthOauth.accessToken.isExpire() && recAuthorTime == 0) { 
+				 System.out.println("token 过期");
+				 String oauthURlString = createAuthOauth.getCode();
+				 response.sendRedirect(oauthURlString);
+				 recAuthorTime = 1;
+				 return;
+			 }
 			 // 这个地方 accessToken 问题：上面 accessTokenString 里面是从网页授权获取一个accessToken
 			 // 获取用户基本信息 是用普通的 accessToken
 			 String accessTokenNormal = WeChat.getAccessToken();
@@ -135,6 +137,18 @@ public class activtiyAction extends BaseAction {
 			 System.out.println(request.getContextPath() + "/chatOil.jsp");
 		 }
 		 else {
+			 if (createAuthOauth.accessToken == null && code != null) {
+				 String accessTokenString = createAuthOauth.getToken(code);
+				  createAuthOauth.setAccessToken(accessTokenString);
+				  recAuthorTime = 0;
+			 }
+			 else if (createAuthOauth.accessToken != null && createAuthOauth.accessToken.isExpire() && recAuthorTime == 0) { 
+				 System.out.println("token 过期");
+				 String oauthURlString = createAuthOauth.getCode();
+				 response.sendRedirect(oauthURlString);
+				 recAuthorTime = 1;
+				 return;
+			 }
 			 System.out.println("意见留言--自动跳转到微信浏览器授权页面");
 			 String oauthURlString = createAuthOauth.getCode();
 			 response.sendRedirect(oauthURlString);

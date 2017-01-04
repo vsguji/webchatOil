@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
   
 
 import com.webchatOil.dao.GeneralDao;  
-import com.webchatOil.model.Userinfo; 
+import com.webchatOil.model.LKUserinfo; 
   
 //处理逻辑的Service：UserService.java 
 //因为Service只是处理增删改查，没有验证数据，所以比较简单，值得注意的是，@Transactional事务注解只能写在Service层，
@@ -22,31 +22,31 @@ public class UserService {
     @Qualifier("GeneralDao")
     private GeneralDao generalDao;  
   
-    public Userinfo findByUserId(String userId) {  
-        return generalDao.findById(Userinfo.class, userId);  
+    public LKUserinfo findByUserId(String userId) {  
+        return generalDao.findById(LKUserinfo.class, userId);  
     }  
   
-    public List<Userinfo> findAll() {  
-        return generalDao.findAll(Userinfo.class);  
+    public List<LKUserinfo> findAll() {  
+        return generalDao.findAll(LKUserinfo.class);  
     }  
   
     @Transactional  
-    public void createUser(Userinfo user) {  
+    public void createUser(LKUserinfo user) {  
         generalDao.save(user);  
     }  
   
     @Transactional  
-    public void updateUser(Userinfo user) {  
+    public void updateUser(LKUserinfo user) {  
         generalDao.update(user);  
     }  
   
     @Transactional  
-    public void deleteUser(String userId) {  
-        generalDao.deleteById(Userinfo.class, userId);  
+    public void deleteUser(int  userId) {  
+        generalDao.deleteById(LKUserinfo.class, userId);  
     }  
   
     @Transactional  
-    public void deleteUser(Userinfo user) {  
+    public void deleteUser(LKUserinfo user) {  
         generalDao.delete(user);  
     }  
 }  

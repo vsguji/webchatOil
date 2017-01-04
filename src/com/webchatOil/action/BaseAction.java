@@ -33,7 +33,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
-import com.webchatOil.model.Userinfo;
+import com.webchatOil.model.LKUserinfo;
 import com.webchatOil.util.TipsMsg;
 
 public class BaseAction extends ActionSupport implements ServletResponseAware, ServletRequestAware {
@@ -81,12 +81,12 @@ public class BaseAction extends ActionSupport implements ServletResponseAware, S
 		return UUID.randomUUID().toString();
 	}
 
-	public static void setCurrentUser(Userinfo entity) {
+	public static void setCurrentUser(LKUserinfo entity) {
 		getSession().setAttribute(CURRENTUSER, entity);
 	};
 
-	public static Userinfo getCurrentUser(){
-		return (Userinfo)getSession().getAttribute(CURRENTUSER);
+	public static LKUserinfo getCurrentUser(){
+		return (LKUserinfo)getSession().getAttribute(CURRENTUSER);
 	}
 
 	public static void removeCurrentUser() {

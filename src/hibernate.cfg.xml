@@ -39,24 +39,16 @@
                 <prop key="hibernate.current_session_context_class">thread</prop>  
             </props>  
         </property>  
-        <!-- 配置持久化映射文件 -->  
-        <property name="mappingLocations">  <!-- mappingResources、mappingLocations、mappingDirectoryLocations、mappingJarLocations -->
-          <list>  
-            <value>classpath:com/webchatOil/model/*.hbm.xml</value>  
-         </list> 
-        </property>  
     </bean>  
   
   <bean id="GeneralDAOImpl" class="com.webchatOil.dao.GeneralDAOImpl">
   </bean>
   <bean id="UserService" class="com.webchatOil.service.UserService">
   </bean>
-  
     <!-- 配置事务管理 -->  
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
         <property name="sessionFactory" ref="sessionFactory" />  
     </bean>  
-  
     <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">  
         <property name="sessionFactory" ref="sessionFactory" />  
     </bean>  
@@ -66,3 +58,15 @@
     <!-- 支持注解 -->
     <tx:annotation-driven />  
 </beans>
+
+
+
+
+<!--  配置持久化映射文件  map class 取代 xml 
+         <property name="mappingLocations">  
+          mappingResources、mappingLocations、mappingDirectoryLocations、mappingJarLocations
+          <list>  
+            <value>classpath:com/webchatOil/model/*.hbm.xml</value>  
+         </list> 
+        </property>
+-->
