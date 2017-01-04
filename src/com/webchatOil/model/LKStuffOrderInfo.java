@@ -24,8 +24,8 @@ public class LKStuffOrderInfo implements Serializable {
 		this.Mo_id = mid;
 	}
 	
-	public int getMo_price() {
-		return this.Mo_id;
+	public String getMo_price() {
+		return this.Mo_price;
 	}
 
 	public void setMo_price(String price) {
@@ -33,10 +33,34 @@ public class LKStuffOrderInfo implements Serializable {
 	}
 	
 	public int getMo_count() {
-		return this.Mo_id;
+		return this.Mo_count;
 	}
 
 	public void setMo_count(int count) {
 		this.Mo_count = count;
+	}
+	
+	public String getMo_needpay() {
+		return this.Mo_needpay;
+	}
+
+	public void setMo_needpay(String needpay) {
+		this.Mo_needpay = needpay;
+	}
+	
+	public String getMo_pay() {
+		return this.Mo_pay;
+	}
+
+	public void setMo_pay(String pay) {
+		this.Mo_pay = pay;
+	}
+	
+	public String getMo_remark() {
+		return this.Mo_remark;
+	}
+
+	public void setMo_remark(String remark) {
+		this.Mo_remark = remark;
 	}
 }

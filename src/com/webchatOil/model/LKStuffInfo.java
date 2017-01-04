@@ -13,7 +13,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name="LKStuffInfo")
 public class LKStuffInfo implements Serializable{
-	
 	private static final long serialVersionUID = 10L;
 	private int M_id;     // 原料编号
 	private String M_name;  // 名称
