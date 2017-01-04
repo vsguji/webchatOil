@@ -1,13 +1,16 @@
 package com.webchatOil.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-
 import org.apache.log4j.Logger;
+
 import com.webchatOil.action.BaseAction;
+import com.webchatOil.model.LKUserinfo;
 import com.webchatOil.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.derrick.WeChatFilter;
@@ -63,11 +66,13 @@ public class activtiyAction extends BaseAction {
 	 */
 	
 	public void setupMenu() throws Exception{
-		// 自定义菜单
+	   // 数据库操作
+	   List<LKUserinfo> userinfos = userService.findAll();
+		
+	   // 自定义菜单
 	   String accessToken = WeChat.getAccessToken();
-	    Menu menu = WeChat.menu; 
-//	   String path = request.getContextPath() + "/"; 
-	    String path = "http://ced98a0d.ngrok.io/webchatOil/";
+	   Menu menu = WeChat.menu; 
+	   String path = ConfKit.baseUrlString;
 	   // 创建按钮
 	   Data4Button btn = new Data4Button();
 	   // 创建一级菜单
