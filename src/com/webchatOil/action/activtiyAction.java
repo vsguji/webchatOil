@@ -44,10 +44,18 @@ public class activtiyAction extends BaseAction {
     private UserService userService;
 	private Logger logger = Logger.getLogger(activtiyAction.class);
 	private int recAuthorTime = 0;
+	
+//	public void setUserService(UserService service){
+//		this.userService = service;
+//	}
+//	
+//	public UserService getUserService(){
+//		return this.userService;
+//	}
+	
 	/*
 	 * 服务器认证
 	 */
-
 	public void doGet() throws Exception{
 		
 		// 接口配置
@@ -66,9 +74,8 @@ public class activtiyAction extends BaseAction {
 	 */
 	
 	public void setupMenu() throws Exception{
-	   // 数据库操作
+		// 数据库操作
 	   List<LKUserinfo> userinfos = userService.findAll();
-		
 	   // 自定义菜单
 	   String accessToken = WeChat.getAccessToken();
 	   Menu menu = WeChat.menu; 
@@ -130,6 +137,7 @@ public class activtiyAction extends BaseAction {
 				 recAuthorTime = 1;
 				 return;
 			 }
+			   
 			 // 这个地方 accessToken 问题：上面 accessTokenString 里面是从网页授权获取一个accessToken
 			 // 获取用户基本信息 是用普通的 accessToken
 			 String accessTokenNormal = WeChat.getAccessToken();

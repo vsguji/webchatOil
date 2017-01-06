@@ -15,18 +15,22 @@ import com.webchatOil.model.LKUserinfo;
 //因为Service只是处理增删改查，没有验证数据，所以比较简单，值得注意的是，@Transactional事务注解只能写在Service层，
 //不能写在Action层，不然会出错，估计是对Spring3对Struts2支持的不太好 
 
-@Service  
+@Service("UserService")
+//@Transactional(readOnly=false)
 public class UserService {  
   
     @Autowired  
-    @Qualifier("GeneralDao")
+    @Qualifier("generalDao")
     private GeneralDao generalDao;  
   
+    @Transactional
     public LKUserinfo findByUserId(String userId) {  
         return generalDao.findById(LKUserinfo.class, userId);  
     }  
   
-    public List<LKUserinfo> findAll() {  
+    @Transactional
+    public List<LKUserinfo> findAll() { 
+    	System.out.println("findAll List<LKUserinfo>");
         return generalDao.findAll(LKUserinfo.class);  
     }  
   
@@ -36,7 +40,7 @@ public class UserService {
     }  
   
     @Transactional  
-    public void updateUser(LKUserinfo user) {  
+    public void updateUser(LKUserinfo user) { 
         generalDao.update(user);  
     }  
   
@@ -48,5 +52,12 @@ public class UserService {
     @Transactional  
     public void deleteUser(LKUserinfo user) {  
         generalDao.delete(user);  
-    }  
+    } 
+    
+    public void ttMethod(){
+    	System.out.println("ttMethod");
+    	List<LKUserinfo> users = findAll();
+    	
+    }
+ 
 }  

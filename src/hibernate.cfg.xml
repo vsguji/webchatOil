@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>  
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xsi:schemaLocation="  
+<beans xmlns="http://www.springframework.org/schema/beans" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:context="http://www.springframework.org/schema/context" 
+  xmlns:aop="http://www.springframework.org/schema/aop"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="  
         http://www.springframework.org/schema/beans  
         http://www.springframework.org/schema/beans/spring-beans.xsd  
         http://www.springframework.org/schema/context  
@@ -36,31 +41,30 @@
                 <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>  
                 <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>  
                 <prop key="hibernate.connection.autocommit">false</prop>  
-                <prop key="hibernate.current_session_context_class">thread</prop>  
+                <prop key="hibernate.current_session_context_class">thread</prop>   
             </props>  
-        </property>  
+        </property> 
     </bean>  
   
   <bean id="GeneralDAOImpl" class="com.webchatOil.dao.GeneralDAOImpl">
   </bean>
+  
   <bean id="UserService" class="com.webchatOil.service.UserService">
   </bean>
-    <!-- 配置事务管理 -->  
-    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
+  
+  <!-- 配置事务管理 -->  
+  <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
         <property name="sessionFactory" ref="sessionFactory" />  
-    </bean>  
-    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">  
+  </bean>  
+  <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">  
         <property name="sessionFactory" ref="sessionFactory" />  
-    </bean>  
+  </bean>  
    <!-- 开始事务管理注解  -->
    <!-- 支持 @aspectj 标签注解 -->
-    <aop:aspectj-autoproxy />  
-    <!-- 支持注解 -->
-    <tx:annotation-driven />  
+  <aop:aspectj-autoproxy />  
+  <!-- 支持注解 -->
+  <tx:annotation-driven />  
 </beans>
-
-
-
 
 <!--  配置持久化映射文件  map class 取代 xml 
          <property name="mappingLocations">  

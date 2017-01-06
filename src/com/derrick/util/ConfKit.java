@@ -15,7 +15,7 @@ public class ConfKit {
 
 	private static Properties props = new Properties();
 	public static  int createMenuStatusCode = 0; //默认为0 未创建
-	public static  String baseUrlString = "http://ced98a0d.ngrok.io/webchatOil/";
+	public static  String baseUrlString = "http://6cc28a77.ngrok.io/webchatOil/";
 
 	static {
 		try {

@@ -2,7 +2,7 @@ package com.webchatOil.service;
 
 import org.springframework.stereotype.Service;
 
-@Service 
+@Service("UserServiceImpl") 
 public class UserServiceImpl {
 	
 }

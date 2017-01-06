@@ -9,52 +9,52 @@ import javax.persistence.Table;
 @Table(name="LKStorageInfo")
 public class LKStorageInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
-    private int Cu_id;  // 客户编号
-    private String Cu_name; // 客户名称
-    private String Cu_phone; // 联系方式
-    private String Cu_Address; // 地址
-    private String Cu_per;   // 负责人
-    private String Cu_remark; // 备注
+    private int S_id;  // 客户编号
+    private String S_name; // 客户名称
+    private String S_num; // 联系方式
+    private String S_alarmnum; // 地址
+    private String S_address;   // 负责人
+    private String S_phone; // 备注
     
-    public void setCu_id(int cuid){
-    	this.Cu_id = cuid;
+    public void setS_id(int cuid){
+    	this.S_id = cuid;
     }
-    public int getCu_id(){
-    	return this.Cu_id;
-    }
-    
-    public void setCu_name(String name){
-    	this.Cu_name = name;
-    }
-    public String getCu_name(){
-    	return this.Cu_name;
+    public int getS_id(){
+    	return this.S_id;
     }
     
-    public void setCu_phone(String phone){
-    	this.Cu_phone = phone;
+    public void setS_name(String name){
+    	this.S_name = name;
     }
-    public String getCu_phone(){
-    	return this.Cu_phone;
-    }
-    
-    public void setCu_Address(String address){
-    	this.Cu_Address = address;
-    }
-    public String getCu_Address(){
-    	return this.Cu_Address;
+    public String getS_name(){
+    	return this.S_name;
     }
     
-    public void setCu_per(String per){
-    	this.Cu_per = per;
+    public void setS_num(String num){
+    	this.S_num = num;
     }
-    public String getCu_per(){
-    	return this.Cu_per;
+    public String getS_num(){
+    	return this.S_num;
     }
     
-    public void setCu_remark(String remark){
-    	this.Cu_remark = remark;
+    public void setS_alarmnum(String alarmnum){
+    	this.S_alarmnum = alarmnum;
+    }
+    public String getS_alarmnum(){
+    	return this.S_alarmnum;
+    }
+    
+    public void setS_address(String address){
+    	this.S_address = address;
+    }
+    public String getS_address(){
+    	return this.S_address;
+    }
+    
+    public void setS_phone(String phone){
+    	this.S_phone = phone;
     }
     public String getCu_remark(){
-    	return this.Cu_remark;
+    	return this.S_phone;
     }
 }

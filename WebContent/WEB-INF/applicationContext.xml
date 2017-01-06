@@ -11,6 +11,9 @@
     <context:component-scan base-package="com.webchatOil.dao" /> 
     <context:component-scan base-package="com.webchatOil.model" />
     <context:component-scan base-package="com.webchatOil.service" />
-    <context:property-placeholder location="classpath:hibernate.properties"/>  
+    <context:property-placeholder location="classpath:hibernate.properties"/>
+    <!-- 积分中心数据库连接相关配置文件 -->
+    <context:property-placeholder location= "classpath:c3p0.properties" ignore-unresolvable="true"/>
+   
     <import resource="classpath:hibernate.cfg.xml"/>  
 </beans>  

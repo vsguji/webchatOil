@@ -2,19 +2,26 @@ package com.webchatOil.model;
 import java.util.Date;
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 /**
  * Userinfo entity.
  * 员工信息
  */
 @Entity							// 表示为实体类
-@Table(name="LKUserinfo")		// 表名注解
+@Table(name="LKUserinfo",schema ="wechatOilDB")		// 表名注解
 public class LKUserinfo implements Serializable {
 	private static final long serialVersionUID = -1496732180293413262L;
 	// Fields
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int  E_id; // 员工编号
 	private int  D_id; // 部门编号
+	@Column(unique=true)
 	private String E_name; // 员工姓名
 	private String loginname; // 登录名
 	private String pwd; // 密码 
