@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;  
   
 
+
+import com.webchatOil.dao.GeneralDAOImpl;
 import com.webchatOil.dao.GeneralDao;  
 import com.webchatOil.model.LKUserinfo; 
   
@@ -16,11 +18,10 @@ import com.webchatOil.model.LKUserinfo;
 //不能写在Action层，不然会出错，估计是对Spring3对Struts2支持的不太好 
 
 @Service("UserService")
-//@Transactional(readOnly=false)
+@Transactional
 public class UserService {  
   
     @Autowired  
-    @Qualifier("generalDao")
     private GeneralDao generalDao;  
   
     @Transactional
@@ -54,10 +55,9 @@ public class UserService {
         generalDao.delete(user);  
     } 
     
+    @Transactional
     public void ttMethod(){
     	System.out.println("ttMethod");
     	List<LKUserinfo> users = findAll();
-    	
     }
- 
 }  

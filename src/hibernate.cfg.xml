@@ -40,16 +40,12 @@
                 <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>  
                 <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>  
                 <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>  
-                <prop key="hibernate.connection.autocommit">false</prop>  
-                <prop key="hibernate.current_session_context_class">thread</prop>   
+                <prop key="hibernate.connection.autocommit">false</prop>    
             </props>  
         </property> 
     </bean>  
   
   <bean id="GeneralDAOImpl" class="com.webchatOil.dao.GeneralDAOImpl">
-  </bean>
-  
-  <bean id="UserService" class="com.webchatOil.service.UserService">
   </bean>
   
   <!-- 配置事务管理 -->  

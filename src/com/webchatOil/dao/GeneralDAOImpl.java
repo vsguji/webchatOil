@@ -3,32 +3,28 @@ package com.webchatOil.dao;
 import java.io.Serializable;  
 import java.util.List;  
   
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.orm.hibernate4.HibernateTemplate;  
 import org.springframework.stereotype.Repository;  
 import org.springframework.stereotype.Service;
   
 //DAO的实现类
-
-@Repository("GeneralDao")
-@Service("GeneralDAOImpl")
+@Repository("GeneralDAOImpl")
 public class GeneralDAOImpl implements GeneralDao {  
   private static final Logger logger = Logger.getLogger(GeneralDAOImpl.class); 
-    @Autowired  
+   // @Autowired  
     private HibernateTemplate hibernateTemplate;  
-  
-    public HibernateTemplate getHibernateTemplate() {
-    	  return hibernateTemplate;
+    	 
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+       this.hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
     
-    @Resource
-    public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
-    	  this.hibernateTemplate = hibernateTemplate;
-    }
-    	 
     public <T> T findById(Class<T> type, Serializable id) {  
         return hibernateTemplate.get(type, id);  
     }  

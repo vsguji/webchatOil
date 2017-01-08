@@ -1,6 +1,10 @@
 package com.webchatOil.action;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,17 +45,9 @@ public class activtiyAction extends BaseAction {
 	HttpServletRequest request = getRequest();
 	HttpServletResponse response = getResponse();
 	@Autowired // @Autowired可以对成员变量、方法和构造函数进行标注，来完成自动装配的工作
-    private UserService userService;
+	private UserService userService;
 	private Logger logger = Logger.getLogger(activtiyAction.class);
 	private int recAuthorTime = 0;
-	
-//	public void setUserService(UserService service){
-//		this.userService = service;
-//	}
-//	
-//	public UserService getUserService(){
-//		return this.userService;
-//	}
 	
 	/*
 	 * 服务器认证
@@ -69,13 +65,51 @@ public class activtiyAction extends BaseAction {
 		  }
 	}
 	
+	/**
+	   * 将map 转为 string
+	   * 
+	   * @param map
+	   * @return
+	   */
+	  public static String getUrlParamsByMap(Map<String, Object> map,
+	          boolean isSort) {
+	      if (map == null) {
+	          return "";
+	      }
+	      StringBuffer sb = new StringBuffer();
+	      List<String> keys = new ArrayList<String>(map.keySet());
+	      if (isSort) {
+	          Collections.sort(keys);
+	      }
+	      for (int i = 0; i < keys.size(); i++) {
+	          String key = keys.get(i);
+	          String value = map.get(key).toString();
+	          sb.append(key + "=" + value);
+	          sb.append("&");
+	      }
+	      String s = sb.toString();
+	      if (s.endsWith("&")) {
+	          s = s.substring(0, s.lastIndexOf("&"));
+	      }
+	      /*
+	       * for (Map.Entry<String, Object> entry : map.entrySet()) {
+	       * sb.append(entry.getKey() + "=" + entry.getValue()); sb.append("&"); }
+	       * String s = sb.toString(); if (s.endsWith("&")) { //s =
+	       * StringUtils.substringBeforeLast(s, "&"); s = s.substring(0,
+	       * s.lastIndexOf("&")); }
+	       */
+	      return s;
+	  }
 	/*
 	 * 创建自定义菜单
 	 */
 	
 	public void setupMenu() throws Exception{
 		// 数据库操作
-	   List<LKUserinfo> userinfos = userService.findAll();
+	   Map<String, Object> mapEleMap =  new HashMap<String,Object>();
+	   mapEleMap.put("E_id", 1);
+	   String mapString = getUrlParamsByMap(mapEleMap, false);
+	   LKUserinfo userinfos = userService.findByUserId(mapString);
 	   // 自定义菜单
 	   String accessToken = WeChat.getAccessToken();
 	   Menu menu = WeChat.menu; 
