@@ -2,16 +2,11 @@ package com.webchatOil.dao;
   
 import java.io.Serializable;  
 import java.util.List;  
-  
-
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.orm.hibernate4.HibernateTemplate;  
 import org.springframework.stereotype.Repository;  
-import org.springframework.stereotype.Service;
   
 //DAO的实现类
 @Repository("GeneralDAOImpl")
