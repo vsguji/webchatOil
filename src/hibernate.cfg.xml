@@ -26,10 +26,15 @@
         <!-- <property name="preferredTestQuery" value="select 1 from dual " />  --> 
     </bean>  
   
-    <!-- SessionFactory -->  
+    <!-- SessionFactory --> 
+    <!-- 配置Hibernate事务管理器 --> 
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">  
         <property name="dataSource" ref="dataSource" />  
-        <property name="packagesToScan" value="com.webchatOi.model" />  <!-- 实体类的包 --> 
+        <property name="packagesToScan">
+         <list>
+         <value>com.webchatOil.model</value>
+         </list>
+        </property>
         <property name="hibernateProperties">  
             <props>  
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>  
@@ -40,22 +45,41 @@
                 <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>  
                 <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>  
                 <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>  
-                <prop key="hibernate.connection.autocommit">false</prop>  
-                <prop key="hibernate.current_session_context_class">thread</prop>   
+                <prop key="hibernate.connection.autocommit">false</prop>
             </props>  
         </property> 
     </bean>  
   
-  <bean id="GeneralDAOImpl" class="com.webchatOil.dao.GeneralDAOImpl">
+  <!-- 用户角色信息 -->
+  <bean id ="GeneralDAOImpl" class="com.webchatOil.dao.GeneralDAOImpl">
+  <property name="sessionFactory" ref="sessionFactory"></property>
   </bean>
+ 
+  <!-- 配置事务异常封装 -->
+   <bean id="persistenceExceptionTranslationPostProcessor" 
+       class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+       
+  <!--  声明式容器事务管理 ,transaction-manager指定事务管理器为transactionManager -->
+  <tx:advice id="txAdvice" transaction-manager="txManager">
+    <tx:attributes>
+        <tx:method name="get*" read-only="true" />
+        <tx:method name="*" />
+    </tx:attributes>
+</tx:advice>
+
+<aop:config expose-proxy="true">
+ <!-- 只对业务逻辑层实施事务 -->
+    <aop:pointcut id="UserServiceOperation"
+        expression="execution(* com.webchatOil.service.*(..))" />
+        <!-- Advisor定义，切入点和通知分别为txPointcut、txAdvice -->
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="UserServiceOperation" />
+</aop:config>
   
-  <!-- 配置事务管理 -->  
+ <!-- 配置Hibernate事务管理器 -->
   <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
         <property name="sessionFactory" ref="sessionFactory" />  
   </bean>  
-  <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">  
-        <property name="sessionFactory" ref="sessionFactory" />  
-  </bean>  
+  
    <!-- 开始事务管理注解  -->
    <!-- 支持 @aspectj 标签注解 -->
   <aop:aspectj-autoproxy />  

@@ -3,8 +3,6 @@ package com.webchatOil.dao;
 import java.io.Serializable;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
 //数据存储层通用DAO接口定义
 
 public interface GeneralDao {
