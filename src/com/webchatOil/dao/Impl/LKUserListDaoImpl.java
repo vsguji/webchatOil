@@ -1,15 +1,15 @@
 package com.webchatOil.dao.Impl;
 
 import java.util.List;
-
 import javax.annotation.Resource;
-import javax.management.Query;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Query;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+
 import com.webchatOil.dao.LKUserListDao;
 import com.webchatOil.model.LKUserinfo;
 
@@ -47,15 +47,25 @@ public class LKUserListDaoImpl extends HibernateDaoSupport implements LKUserList
 		return list;
 	}
 
+	
 	@Override
 	public int getAllRowCount(String hql) {
 		// TODO Auto-generated method stub
 		return ht.find(hql).size();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public boolean newCourse(LKUserinfo course) {
 		// TODO Auto-generated method stub
+		ht.execute(new HibernateCallback() {
+
+			public Object doInHibernate(Session session) throws HibernateException {
+				session.save(course);
+				return true;
+			}
+			
+		});
 		return false;
 	}
 

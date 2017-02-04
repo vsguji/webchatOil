@@ -12,16 +12,16 @@ import javax.persistence.Table;
  * Userinfo entity.
  * 员工信息
  */
-@Entity							// 表示为实体类
-@Table(name="LKUserinfo",schema ="wechatOilDB")		// 表名注解
+//@Entity							// 表示为实体类
+//@Table(name="LKUserinfo",schema ="wechatOilDB")		// 表名注解
 public class LKUserinfo implements Serializable {
 	private static final long serialVersionUID = -1496732180293413262L;
 	// Fields
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+//	@Id
+//	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int  E_id; // 员工编号
 	private int  D_id; // 部门编号
-	@Column(unique=true)
+//	@Column(unique=true)
 	private String E_name; // 员工姓名
 	private String loginname; // 登录名
 	private String pwd; // 密码 
@@ -88,5 +88,37 @@ public class LKUserinfo implements Serializable {
 	
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
+	}
+	
+	public String getPhoneH() {
+		return this.phoneH;
+	}
+	
+	public void setPhoneH(String phone) {
+		this.phoneH = phone;
+	}
+	
+	public String getphoneM() {
+		return this.phoneM;
+	}
+	
+	public void setPhoneM(String phoneM) {
+		this.phoneM = phoneM;
+	}
+	
+	public String getAddress() {
+		return this.Address;
+	}
+	
+	public void setAddress(String address) {
+		this.Address = address;
+	}
+	
+	public String getPopedom() {
+		return this.popedom;
+	}
+	
+	public void setPopedom(String popeDom) {
+		this.popedom = popeDom;
 	}
 }

@@ -4,6 +4,7 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
@@ -43,10 +44,11 @@
 	<!-- 开启Spring框架的事务管理 ，开启之后@Transaction就可以用了 -->
 	<tx:annotation-driven transaction-manager="txManager"/>
 	
-	<!-- 实现教师信息管理需要配置的Bean -->
+	<!-- 实现客户信息管理需要配置的Bean -->
 	<bean id="lkUserListDao" class="com.webchatOil.dao.Impl.LKUserListDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
-	<bean id="Service" class="com.webchatOil.service.UserServiceImpl">
+	<bean id="userService" class="com.webchatOil.service.Impl.UserServiceBean"></bean>
+	<bean id="activtiyAction" class="com.webchatOil.action.activtiyAction" scope="prototype">
 	</bean>
 </beans>

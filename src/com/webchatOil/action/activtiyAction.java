@@ -6,15 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.apache.log4j.Logger;
 
 import com.webchatOil.action.BaseAction;
 import com.webchatOil.model.LKUserinfo;
+import com.webchatOil.po.page.PageBean;
 import com.webchatOil.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.derrick.WeChatFilter;
@@ -44,14 +45,33 @@ public class activtiyAction extends BaseAction {
 	private static WeChatFilter filter = new WeChatFilter();
 	HttpServletRequest request = getRequest();
 	HttpServletResponse response = getResponse();
-	@Autowired // @Autowired可以对成员变量、方法和构造函数进行标注，来完成自动装配的工作
-	private UserService userService;
 	private Logger logger = Logger.getLogger(activtiyAction.class);
 	private int recAuthorTime = 0;
 	
+	/**
+	 * 采用注解的方式引入Service类
+	 */
+	@Resource private UserService userService;
+	
+	private int page;
+	
+	private PageBean pageBean;
+	/**
+	 * 客户信息的列表
+	 */
+	private List usersInfo;
 	/*
 	 * 服务器认证
 	 */
+	
+	public PageBean getPageBean() {
+		return pageBean;
+	}
+
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
+	
 	public void doGet() throws Exception{
 		
 		// 接口配置
@@ -106,10 +126,7 @@ public class activtiyAction extends BaseAction {
 	
 	public void setupMenu() throws Exception{
 		// 数据库操作
-	   Map<String, Object> mapEleMap =  new HashMap<String,Object>();
-	   mapEleMap.put("E_id", 1);
-	   String mapString = getUrlParamsByMap(mapEleMap, false);
-	   LKUserinfo userinfos = userService.findByUserId(mapString);
+	   getAllInfo();
 	   // 自定义菜单
 	   String accessToken = WeChat.getAccessToken();
 	   Menu menu = WeChat.menu; 
@@ -145,10 +162,16 @@ public class activtiyAction extends BaseAction {
 	   System.out.println(menu.createMenu(accessToken, menus));
 	}
 	
+	
+	public String getAllInfo() throws Exception {
+		pageBean = userService.getAllUsersInfo(3, page);
+		usersInfo = pageBean.getList();
+		return SUCCESS;
+	}
+	
 	/*
 	 * 网页授权
 	 */
-
 	 public void recAuthAction() throws Exception{
 		 String code = request.getParameter("code");
 		 Oauth createAuthOauth = WeChat.webAuth;

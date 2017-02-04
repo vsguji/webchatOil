@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://java.sun.com/xml/ns/javaee" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+version="2.5">
   <display-name>webchat Application</display-name>
   <!-- 欢迎页面 -->
   <welcome-file-list>
     <welcome-file>chatOil.jsp</welcome-file>
   </welcome-file-list>
 
-  <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/applicationContext.xml</param-value>
-  </context-param>
-  
+  <!-- 指定spring的配置文件,监听器默认从web根目录下寻找配置文件,可以通过提供classpath前缀指定从类路径下寻找 -->  
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
+	</context-param>
+	
   <context-param>
     <param-name>log4jConfigLocation</param-name>
     <param-value>/WEB-INF/classes/log4j.properties</param-value>
