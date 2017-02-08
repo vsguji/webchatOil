@@ -2,27 +2,38 @@ package com.webchatOil.action;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+import org.apache.struts2.components.Debug;
 
+import com.webchatOil.Test.Demo;
 import com.webchatOil.action.BaseAction;
 import com.webchatOil.model.LKUserinfo;
 import com.webchatOil.po.page.PageBean;
 import com.webchatOil.service.UserService;
+import com.webchatOil.service.Impl.UserServiceBean;
+import com.webchatOil.util.EventListenerObject;
+import com.webchatOil.util.BarEventListener;
 import com.alibaba.fastjson.JSON;
 import com.derrick.WeChatFilter;
 import com.derrick.WeChat;
 import com.derrick.domain.Data4Button;
 import com.derrick.domain.Data4Menu;
+import com.derrick.domain.InMessage;
 import com.derrick.domain.UserInfo;
+import com.derrick.exception.WeixinMenuOutOfBoundException;
+import com.derrick.exception.WeixinSubMenuOutOfBoundException;
 import com.derrick.oauth.Menu;
 import com.derrick.oauth.Oauth;
 import com.derrick.oauth.User;
@@ -38,20 +49,18 @@ import com.derrick.util.ConfKit;
 //
 //一个注册的例子,如果没加上这个注解,注册完成后,下一个请求再注册一次,Action里会保留上一次注册的信息..
 // 保证线程安全
-
-
-public class activtiyAction extends BaseAction {
+public class activtiyAction extends BaseAction implements BarEventListener {
 	private static final long serialVersionUID = 3321845277376234101L;
 	private static WeChatFilter filter = new WeChatFilter();
 	HttpServletRequest request = getRequest();
 	HttpServletResponse response = getResponse();
 	private Logger logger = Logger.getLogger(activtiyAction.class);
 	private int recAuthorTime = 0;
-	
 	/**
 	 * 采用注解的方式引入Service类
 	 */
-	@Resource private UserService userService;
+	@Autowired
+    private UserService userService;
 	
 	private int page;
 	
@@ -71,98 +80,133 @@ public class activtiyAction extends BaseAction {
 	public void setPageBean(PageBean pageBean) {
 		this.pageBean = pageBean;
 	}
-	
+
+	@SuppressWarnings("deprecation")
 	public void doGet() throws Exception{
-		
 		// 接口配置
 		filter.doFilter(request, response, null);
 		int code = response.getStatus();
 		// 测试订阅号 自定义菜单
 		  if (code == HttpServletResponse.SC_OK && ConfKit.createMenuStatusCode == 0 ) {
 			  System.out.println("ok");
-			  setupMenu();
+			  logger.log(Priority.DEBUG, "ok");
+			  ConfKit.eventSource.addListener(this); // 注册监听 底部菜单
 			  ConfKit.createMenuStatusCode = 1;
 		  }
 	}
 	
-	/**
-	   * 将map 转为 string
-	   * 
-	   * @param map
-	   * @return
-	   */
-	  public static String getUrlParamsByMap(Map<String, Object> map,
-	          boolean isSort) {
-	      if (map == null) {
-	          return "";
-	      }
-	      StringBuffer sb = new StringBuffer();
-	      List<String> keys = new ArrayList<String>(map.keySet());
-	      if (isSort) {
-	          Collections.sort(keys);
-	      }
-	      for (int i = 0; i < keys.size(); i++) {
-	          String key = keys.get(i);
-	          String value = map.get(key).toString();
-	          sb.append(key + "=" + value);
-	          sb.append("&");
-	      }
-	      String s = sb.toString();
-	      if (s.endsWith("&")) {
-	          s = s.substring(0, s.lastIndexOf("&"));
-	      }
-	      /*
-	       * for (Map.Entry<String, Object> entry : map.entrySet()) {
-	       * sb.append(entry.getKey() + "=" + entry.getValue()); sb.append("&"); }
-	       * String s = sb.toString(); if (s.endsWith("&")) { //s =
-	       * StringUtils.substringBeforeLast(s, "&"); s = s.substring(0,
-	       * s.lastIndexOf("&")); }
-	       */
-	      return s;
-	  }
 	/*
 	 * 创建自定义菜单
+	 *  // 数据库操作,根据用户权限动态显示菜单
+	   // 1.直接点击关注，视为新用户
+	   // 2.通过link,引导用户订阅，成为目标用户。
 	 */
 	
-	public void setupMenu() throws Exception{
-		// 数据库操作
-	   getAllInfo();
-	   // 自定义菜单
+	public void setupMenu(String userid) throws Exception{
 	   String accessToken = WeChat.getAccessToken();
 	   Menu menu = WeChat.menu; 
-	   String path = ConfKit.baseUrlString;
 	   // 创建按钮
-	   Data4Button btn = new Data4Button();
-	   // 创建一级菜单
-	   Data4Menu menu1 = new Data4Menu("click", "供求信息","Btn_0");
-	   Data4Menu menu2 = new Data4Menu("click", "粮食购销", "Btn_1");
-	   Data4Menu menu3 = new Data4Menu("view", "意见留言",  path + "recAuthAction");
-	   // 创建二级菜单
-	   // 1.供求信息
-	   Data4Menu menu1_0 = new Data4Menu("view", "发布求购信息","http://www.baidu.com");
-	   Data4Menu menu1_1 = new Data4Menu("view", "发布出售信息", "http://www.baidu.com");
-	   menu1.addSubMenu(menu1_0);
-	   menu1.addSubMenu(menu1_1);
-	   // 2.粮食购销
-	   Data4Menu menu2_0 = new Data4Menu("view", "线上下单","http://www.baidu.com");
-	   Data4Menu menu2_1 = new Data4Menu("view", "扫码支付","http://www.baidu.com");
-	   Data4Menu menu2_2 = new Data4Menu("view", "历史记录","http://www.baidu.com");
-	   menu2.addSubMenu(menu2_0);;
-	   menu2.addSubMenu(menu2_1);
-	   menu2.addSubMenu(menu2_2);
-	   // 3.留言
-	   
-	   // 菜单之间的关系
-	   btn.addMenu(menu1);
-	   btn.addMenu(menu2);
-	   btn.addMenu(menu3);
+	   Data4Button btn = null;
+//	  String userid0 = "oy-F2t1TtETlOjqXkAJG6whKY9nQ";
+	   if (isExist(userid) == false){ // 用户不存在，添加新用户
+		   // 1.拉取客户基本信息
+		   String token = WeChat.getAccessToken();
+		   UserInfo baseInfo = WeChat.user.getUserInfo(token, userid);
+		   LKUserinfo newLkUserinfo = new LKUserinfo();
+		   newLkUserinfo.setWechatID(baseInfo.getOpenid());
+		   newLkUserinfo.setE_name(baseInfo.getNickname());
+		   newLkUserinfo.setWechatPic(baseInfo.getHeadimgurl());
+		   newLkUserinfo.setSex(Integer.toString( baseInfo.getSex()));
+		   newLkUserinfo.setPopedom("employee");
+		   userService.insertNewUser(newLkUserinfo);
+		   btn = build2Items();
+		   logger.log(Priority.DEBUG, "添加新目标用户");
+	   }
+	   else {
+		   String userTypeString = getUserType(userid).trim();
+		   if (userTypeString.equals("admin")) {
+			   btn = buildI1tems();
+		   }
+		   else if (userTypeString.equals("employee")) {
+			   btn = build2Items();
+		   }
+	   }
 	   // Object -> json
-	   String menus = JSON.toJSONString(btn);
-	   menu.createMenu(accessToken, menus);
-	   System.out.println(menu.createMenu(accessToken, menus));
+	   if (btn != null) {
+		   String menus = JSON.toJSONString(btn);
+		   menu.createMenu(accessToken, menus);
+		   System.out.println(menu.createMenu(accessToken, menus));
+	   }
+	   else {
+		   System.out.println("error");
+	   }
 	}
 	
-	
+	/*
+	 * 底部菜单项1 admin,manage
+	 */
+	 public Data4Button buildI1tems() throws WeixinSubMenuOutOfBoundException, WeixinMenuOutOfBoundException{
+		   String path = ConfKit.baseUrlString;
+		   Data4Button btn = new Data4Button();
+		   Data4Menu menu1 = new Data4Menu("view", "供求列表","http://www.baidu.com");
+		   Data4Menu menu2 = new Data4Menu("view", "发布商品", "http://www.baidu.com");
+		   Data4Menu menu3 = new Data4Menu("view", "客户列表", path + "");
+		   btn.addMenu(menu1);
+		   btn.addMenu(menu2);
+		   btn.addMenu(menu3);
+		   return btn;
+	}
+	 
+	 /*
+	  * 底部菜单项2 employee
+	  */
+	 public Data4Button build2Items() throws WeixinSubMenuOutOfBoundException, WeixinMenuOutOfBoundException{
+		  String path = ConfKit.baseUrlString;
+		  Data4Button btn = new Data4Button();
+		 // 创建一级菜单
+		   Data4Menu menu1 = new Data4Menu("click", "供求信息","Btn_0");
+		   Data4Menu menu2 = new Data4Menu("click", "粮食购销", "Btn_1");
+		   Data4Menu menu3 = new Data4Menu("view", "意见留言",  path + "recAuthAction");
+		   // 创建二级菜单
+		   // 1.供求信息
+		   Data4Menu menu1_0 = new Data4Menu("view", "发布求购信息","http://www.baidu.com");
+		   Data4Menu menu1_1 = new Data4Menu("view", "发布出售信息", "http://www.baidu.com");
+		   menu1.addSubMenu(menu1_0);
+		   menu1.addSubMenu(menu1_1);
+		   // 2.粮食购销
+		   Data4Menu menu2_0 = new Data4Menu("view", "线上下单","http://www.baidu.com");
+		   Data4Menu menu2_1 = new Data4Menu("view", "扫码支付","http://www.baidu.com");
+		   Data4Menu menu2_2 = new Data4Menu("view", "历史记录","http://www.baidu.com");
+		   menu2.addSubMenu(menu2_0);;
+		   menu2.addSubMenu(menu2_1);
+		   menu2.addSubMenu(menu2_2);
+		   // 3.留言
+		   btn.addMenu(menu1);
+		   btn.addMenu(menu2);
+		   btn.addMenu(menu3);
+		   return btn;
+	}
+
+	 /*
+	  * 验证用户是否存在
+	  */
+	 public boolean isExist(String userid){
+		 List currentUserinfo = userService.getSingleUserInfo(userid);
+		 if (currentUserinfo.size() != 0){
+			 return true;
+		 }
+		 return false;
+	 }
+	 
+	/*
+	 * 获取用户权限
+	 */
+	public String getUserType(String userid){
+	    List currentUserinfo = userService.getSingleUserInfo(userid);
+	    LKUserinfo item0 = (LKUserinfo) currentUserinfo.get(0);
+		return item0.getPopedom();
+	}
+
 	public String getAllInfo() throws Exception {
 		pageBean = userService.getAllUsersInfo(3, page);
 		usersInfo = pageBean.getList();
@@ -224,4 +268,22 @@ public class activtiyAction extends BaseAction {
 			 response.sendRedirect(oauthURlString);
 		 }
 	 }
+
+	 /*
+	  * (non-Javadoc)
+	  * @see com.webchatOil.util.InterfaceEventListener#process(com.webchatOil.util.EventListenerObject)
+	  * 回调:创建底部 菜单项
+	  */
+	@Override
+	public void process(EventListenerObject event) {
+		// TODO Auto-generated method stub
+		System.out.println("notificate message success!!");
+		InMessage msgObjInMessage = event.getMsg();
+		try {
+			setupMenu(msgObjInMessage.getFromUserName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

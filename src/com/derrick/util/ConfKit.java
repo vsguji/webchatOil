@@ -3,6 +3,8 @@ package com.derrick.util;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+
+import com.webchatOil.util.EventListenerSource;
 /**
  * 
 * @ClassName: ConfKit 
@@ -15,13 +17,14 @@ public class ConfKit {
 
 	private static Properties props = new Properties();
 	public static  int createMenuStatusCode = 0; //默认为0 未创建
-	public static  String baseUrlString = "http://5598e13f.ngrok.io/webchatOil/";
-
+	public static  String baseUrlString = "http://a157d446.ngrok.io/webchatOil/";
+    public  static EventListenerSource eventSource = null;
 	static {
 		try {
 			//play框架下要用这种方式加载
 			//props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("/wechat.properties"));
 			props.load(ConfKit.class.getResourceAsStream("/wechat.properties"));
+			eventSource = new EventListenerSource(); // 监听
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

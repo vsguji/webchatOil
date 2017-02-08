@@ -11,6 +11,7 @@
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<constant name="struts.configuration.xml.reload" value="true" />
 	<constant name="struts.multipart.maxSize" value="1073741824" />
+	<constant name="struts.action.excludePattern" value="/static/.*?" />
 <package name="welcome" extends="struts-default"> 
 <!-- 欢迎管理 -->
     <action name="welcome" class="com.webchatOil.action.WelcomeAction"> 
@@ -36,6 +37,7 @@
      <action name="doHelp" class="com.webchatOil.action.advicesManagerAction" method="doHelp"></action>
  <!-- 微信乐淘粮食购销管理 -->
 	 <action name="doHelp" class="com.webchatOil.action.advicesManagerAction" method="doHelp"></action>	 
+ <!-- 微信消息  -->	 
 </package> 
 </struts> 
     

@@ -15,6 +15,7 @@ import com.derrick.domain.NewsOutMessage;
 import com.derrick.domain.OutMessage;
 import com.derrick.domain.TemplateData;
 import com.derrick.domain.TextOutMessage;
+import com.derrick.util.ConfKit;
 
 public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHandler{
 
@@ -37,7 +38,7 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 	@Override
 	public void textTypeMsg(InMessage msg) {
 		String msgContentString  = msg.getContent();
-		if (msgContentString.contains("大豆") == true){
+		if (msgContentString.contains("大豆") == true){ // 商品存储表
 			NewsOutMessage newMsg = new NewsOutMessage();
 			newMsg.setTitle("Hello world");
 			newMsg.setUrl("http://www.baidu.com");
@@ -94,13 +95,15 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 	    switch (msg.getEvent()) {
 		case "LOCATION":
 			break;
-		case "subscribe": // 订阅频道
+		case "subscribe":
+			// 创建底部菜单
+			 ConfKit.eventSource.notifyListenerEventWithMessage(msg);
+			// 订阅频道
 			TextOutMessage out = new TextOutMessage();
 			out.setContent("感谢您的关注,༺乐淘༻为你服务.");
 			setOutMessage(out);
 			break;
 		case "unsubscribe":// 取消订阅频道  删除历史消息
-			
 			break;
 		default:
 			break;

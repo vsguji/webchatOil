@@ -31,9 +31,19 @@ public interface LKUserListDao {
 	
 	/**
 	 * 新客户
-	 * @param LKUserinfo
-	 * 		  新客户实体类
 	 * @return
 	 */
-	public boolean newCourse(final LKUserinfo course);
+	public boolean insertNewUser(LKUserinfo user);
+	
+	/**
+	 * 更新客户信息
+	 * @return 
+	 */
+	public boolean updateNewUser(LKUserinfo user);
+	
+	/**
+	 * 删除客户信息
+	 * @return 
+	 */
+	public boolean deleteNewUser(LKUserinfo user);
 }

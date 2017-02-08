@@ -10,7 +10,7 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd">  
   
     <!-- C3P0 数据源 -->  
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">  
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">  
         <property name="driverClass" value="${hibernate.connection.driver_class}" />  
         <property name="jdbcUrl" value="${hibernate.connection.url}" />  
         <property name="user" value="${hibernate.connection.username}" />  
@@ -23,8 +23,11 @@
   
     <!-- SessionFactory -->  
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">  
+    <!-- 设置数据源 --> 
         <property name="dataSource" ref="dataSource" />  
-        <property name="packagesToScan" value="com.webchatOi.model" />  <!-- 实体类的包 --> 
+        <!-- 实体类的包 --> 
+        <property name="packagesToScan" value="com.webchatOi.model" /> 
+        <!-- 属性设置 -->
         <property name="hibernateProperties">  
             <props>  
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>  
@@ -35,14 +38,20 @@
                 <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>  
                 <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>  
                 <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>  
-                <prop key="hibernate.connection.autocommit">false</prop>  
-                <prop key="hibernate.current_session_context_class">thread</prop>  
-            </props>  
-        </property>  
+                <prop key="hibernate.connection.autocommit">false</prop>    
+            </props> 
+        </property> 
+        <!-- 映射文件配置 -->
+        <property name="annotatedClasses">  
+            <list>  
+                <value>com.webchatOil.model.LKUserinfo</value>  
+            </list>  
+        </property> 
     </bean>  
-  
-  <bean id="generalDAO" class="com.webchatOil.dao.GeneralDAOImpl"></bean>
-  <bean id="userService" class="com.webchatOil.service.UserService"></bean>
+     <bean id="LKUserListDaoImpl" class="com.webchatOil.dao.Impl.LKUserListDaoImpl">
+     <property name="hibernateTemplate" ref="hibernateTemplate"></property>
+     </bean>
+       
     <!-- 配置事务管理 -->  
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
         <property name="sessionFactory" ref="sessionFactory" />  
@@ -53,8 +62,20 @@
    <!-- 开始事务管理注解  -->
    <!-- 支持 @aspectj 标签注解 -->
     <aop:aspectj-autoproxy />  
-    <!-- 支持注解 -->
-    <tx:annotation-driven />  
+     
+    <!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+	<tx:advice id="transactionAdvice"
+		transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="list*" read-only="true" />
+			<tx:method name="save" read-only="false" />
+			<tx:method name="delete" read-only="false" />
+		</tx:attributes>
+	</tx:advice>
 </beans>
 
 <!--  配置持久化映射文件  map class 取代 xml 

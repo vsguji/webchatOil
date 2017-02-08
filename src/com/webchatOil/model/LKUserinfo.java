@@ -12,16 +12,17 @@ import javax.persistence.Table;
  * Userinfo entity.
  * 员工信息
  */
-//@Entity							// 表示为实体类
-//@Table(name="LKUserinfo",schema ="wechatOilDB")		// 表名注解
+@Entity							// 表示为实体类
+@Table(name="tb_userinfo",schema ="wechatdb")		// 表名注解
 public class LKUserinfo implements Serializable {
 	private static final long serialVersionUID = -1496732180293413262L;
-	// Fields
-//	@Id
-//	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	// Field
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int  E_id; // 员工编号
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int  D_id; // 部门编号
-//	@Column(unique=true)
+	@Column(unique=true)
 	private String E_name; // 员工姓名
 	private String loginname; // 登录名
 	private String pwd; // 密码 
@@ -31,7 +32,9 @@ public class LKUserinfo implements Serializable {
 	private String phoneM; // 手机号
 	private String Address; // 家庭住址
     private String popedom; // 权限
-
+    @Column(unique=true,nullable = false)
+    private String wechatID; // 微信id
+    private String wechatPic;// 客户微信头像
     // Property accessors
 
 	public int getE_id() {
@@ -120,5 +123,21 @@ public class LKUserinfo implements Serializable {
 	
 	public void setPopedom(String popeDom) {
 		this.popedom = popeDom;
+	}
+	
+	public String getWechatID() {
+		return this.wechatID;
+	}
+	
+	public void setWechatID(String wechatID) {
+		this.wechatID = wechatID;
+	}
+	
+	public String getWechatPic() {
+		return this.wechatPic;
+	}
+	
+	public void setWechatPic(String wechatPic) {
+		this.wechatPic = wechatPic;
 	}
 }

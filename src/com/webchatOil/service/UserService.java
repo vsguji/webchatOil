@@ -28,9 +28,25 @@ public interface UserService {
 	
 	/**
 	 * 新客户
-	 * @param course
+	 * @param user
 	 * 			新客户信息实体类
 	 * @return
 	 */
-	public boolean newCourse(final LKUserinfo course);
+	public boolean insertNewUser(final LKUserinfo user);
+	
+	/**
+	 * 更新客户信息
+	 * @param user 
+	 *        更新客户信息实体类
+	 * @return 
+	 */
+	public boolean updateNewUser(final LKUserinfo user);
+	
+	/**
+	 * 删除客户信息
+	 * @param user 
+	 *        删除客户信息实体类
+	 * @return 
+	 */
+	public boolean deleteNewUser(final LKUserinfo user);
 }  

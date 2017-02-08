@@ -1,9 +1,8 @@
 package com.webchatOil.action;
-import java.util.ArrayList;
 import java.util.List;
-
 import com.webchatOil.model.LKUserinfo;
 import com.webchatOil.service.UserService;
+
 public class userManagerAction extends BaseAction {
 	/**
 	 * 
@@ -24,7 +23,7 @@ public class userManagerAction extends BaseAction {
 	 * 获取所有用户
 	 */
 	public List<LKUserinfo> doGetUser(){
-		users = userService.findAll();
+		//users = userService.findAll();
 		return null;
 	}
 	
@@ -39,7 +38,7 @@ public class userManagerAction extends BaseAction {
 	 *  注册新用户
 	 */
 	public void doRegsisterUser(LKUserinfo newUser){
-		 userService.createUser(newUser);
+		// userService.createUser(newUser);
 		 message = "创建用户'" + newUser.getE_id() + "'成功"; 
 	}
 	
@@ -47,7 +46,7 @@ public class userManagerAction extends BaseAction {
 	 * 删除用户
 	 */
 	public void doRemoveOlderUser(LKUserinfo oldUser){
-		 userService.deleteUser(oldUser.getE_id());  
+		// userService.deleteUser(oldUser.getE_id());  
 	     message = "删除用户'" + oldUser.getE_id() + "'成功";
 	}
 	
@@ -55,7 +54,7 @@ public class userManagerAction extends BaseAction {
 	 * 更新用户信息
 	 */
 	public void doUpdateOlderUser(LKUserinfo oldUser){
-		 userService.updateUser(oldUser);  
+		// userService.updateUser(oldUser);  
 	     message = "修改用户'" + oldUser.getE_id() + "'成功";
 	}
 	
