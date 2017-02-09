@@ -1,7 +1,11 @@
 package com.webchatOil.action;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +29,7 @@ import com.webchatOil.service.UserService;
 import com.webchatOil.service.Impl.UserServiceBean;
 import com.webchatOil.util.EventListenerObject;
 import com.webchatOil.util.BarEventListener;
+import com.webchatOil.util.MapHandler;
 import com.alibaba.fastjson.JSON;
 import com.derrick.WeChatFilter;
 import com.derrick.WeChat;
@@ -104,14 +109,16 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	
 	public void setupMenu(String userid) throws Exception{
 	   String accessToken = WeChat.getAccessToken();
+	   Map<String, Object> map1 = new HashMap<String, Object>();
+	   map1.put("access_token", accessToken);
+	   WeChat.webAuth.setAccessToken(map1);
 	   Menu menu = WeChat.menu; 
 	   // 创建按钮
 	   Data4Button btn = null;
 //	  String userid0 = "oy-F2t1TtETlOjqXkAJG6whKY9nQ";
 	   if (isExist(userid) == false){ // 用户不存在，添加新用户
 		   // 1.拉取客户基本信息
-		   String token = WeChat.getAccessToken();
-		   UserInfo baseInfo = WeChat.user.getUserInfo(token, userid);
+		   UserInfo baseInfo = WeChat.user.getUserInfo(accessToken, userid);
 		   LKUserinfo newLkUserinfo = new LKUserinfo();
 		   newLkUserinfo.setWechatID(baseInfo.getOpenid());
 		   newLkUserinfo.setE_name(baseInfo.getNickname());
@@ -228,7 +235,9 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 		 if (code != null) {
 			 if (createAuthOauth.accessToken == null) {
 				 String accessTokenString = createAuthOauth.getToken(code);
-				  createAuthOauth.setAccessToken(accessTokenString);
+				 Map<String, Object> map1 = new HashMap<String, Object>();
+				   map1.put("access_token", accessTokenString);
+				  createAuthOauth.setAccessToken(map1);
 				  recAuthorTime = 0;
 			 }
 			 else if (createAuthOauth.accessToken.isExpire() && recAuthorTime == 0) { 
@@ -253,7 +262,9 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 		 else {
 			 if (createAuthOauth.accessToken == null && code != null) {
 				 String accessTokenString = createAuthOauth.getToken(code);
-				  createAuthOauth.setAccessToken(accessTokenString);
+				  Map<String, Object> map1 = new HashMap<String, Object>();
+				   map1.put("access_token", accessTokenString);
+				  createAuthOauth.setAccessToken(map1);
 				  recAuthorTime = 0;
 			 }
 			 else if (createAuthOauth.accessToken != null && createAuthOauth.accessToken.isExpire() && recAuthorTime == 0) { 
@@ -286,4 +297,15 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 			e.printStackTrace();
 		}
 	}
+	
+
+	/*
+	 * 测试方式
+	 */
+	public void doTest(){
+		   String path = this.getClass().getResource("/").getPath() + "images/huangdou.jpg";
+		   System.out.println("path:" + path);
+		    File file1 = new File(path);
+		    System.out.println(file1.exists());
+	   }
 }

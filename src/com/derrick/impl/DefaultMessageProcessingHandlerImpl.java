@@ -5,21 +5,30 @@
  */
 package com.derrick.impl;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.ObjectUtils.Null;
+import org.apache.log4j.Logger;
 
 import com.derrick.WeChat;
 import com.derrick.domain.Articles;
+import com.derrick.domain.Attachment;
 import com.derrick.domain.InMessage;
 import com.derrick.domain.NewsOutMessage;
 import com.derrick.domain.OutMessage;
 import com.derrick.domain.TemplateData;
 import com.derrick.domain.TextOutMessage;
 import com.derrick.util.ConfKit;
+import com.webchatOil.action.activtiyAction;
 
 public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHandler{
 
 	private OutMessage outMessage;
+	private Logger logger = Logger.getLogger(DefaultMessageProcessingHandlerImpl.class);
 	
 	@Override
 	public void allType(InMessage msg){
@@ -39,16 +48,36 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 	public void textTypeMsg(InMessage msg) {
 		String msgContentString  = msg.getContent();
 		if (msgContentString.contains("大豆") == true){ // 商品存储表
-			NewsOutMessage newMsg = new NewsOutMessage();
-			newMsg.setTitle("Hello world");
-			newMsg.setUrl("http://www.baidu.com");
-			List<Articles> list = new ArrayList<Articles>();
-			Articles at1 = new Articles();
-			at1.setTitle("Hello world Title");
-			at1.setDescription("Hello world SubTitle");
-			list.add(at1);
-			newMsg.setArticles(list);
-			setOutMessage(newMsg);
+			String accessToken;
+			try {
+				accessToken = WeChat.webAuth.getSaveToken().access_token; 
+				if (accessToken == null) {
+					accessToken = WeChat.getAccessToken();
+					//WeChat.webAuth.setAccessToken(accessToken);
+				}
+				String baseurString = this.getClass().getResource("/webchatOil").getPath();
+				String baseurString1 = this.getClass().getResource("/webchatOil").getPath() + "static/image/huangdou.jpg";
+				String url = "/Library/Tomcat/webapps/webchatOil/static/image/huangdou.jpg";
+				Map<String, Object> backMap = WeChat.uploadMedia(accessToken, "thumb", new File(url));
+				System.out.println(backMap);
+				String media_id = (String) backMap.get("thumb_media_id");
+				Attachment mediaMent = WeChat.getMedia(accessToken, media_id);
+				NewsOutMessage newMsg = new NewsOutMessage();
+				newMsg.setTitle("Hello world");
+				List<Articles> list = new ArrayList<Articles>();
+				Articles at1 = new Articles();
+				at1.setTitle("Hello world Title");
+				at1.setDescription("Hello world SubTitle");
+				String baseUrlString = ConfKit.baseUrlString;
+				at1.setPicUrl(baseUrlString + "static/image/huangdou.jpg");
+				at1.setUrl("http://www.baidu.com");
+				list.add(at1);
+				newMsg.setArticles(list);
+				setOutMessage(newMsg);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else if (msgContentString.contains("通知") == true) {
 			try {

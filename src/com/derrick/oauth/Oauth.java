@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
+
 import com.derrick.util.ConfKit;
 import com.derrick.util.HttpKit;
 import com.webchatOil.util.JsonUtils;
@@ -119,11 +121,11 @@ public class Oauth {
     /**
      * access_token map 转 javaBean
      */
-    public void setAccessToken(String token){
+    public void setAccessToken(Map<String, Object> token){
     	JSONObject object =JSONObject.fromObject(token);
     	WebAccessToken tokenObj = (WebAccessToken)JSONObject.toBean(object, WebAccessToken.class);
     	// 存储json 到本地
-    	String path = localPath();
+    	String path = Oauth.localPath();
     	JsonUtils.writeJson(path, token, "token");
     	accessToken = tokenObj;
     }
@@ -144,7 +146,8 @@ public class Oauth {
     /**
      * 当前资源路径
      */
-    public static String localPath(){
-    	return "d:\\";
+    @SuppressWarnings("unused")
+	public static String localPath(){
+    	return Thread.currentThread().getContextClassLoader().getResource("").getPath();
     }
 }

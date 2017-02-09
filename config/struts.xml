@@ -21,6 +21,7 @@
  <!-- 微信授权管理  -->
      <action name="doGet" class="com.webchatOil.action.activtiyAction" method="doGet"></action>
      <action name="recAuthAction" class="com.webchatOil.action.activtiyAction" method="recAuthAction"></action>
+     <action name="doTest" class="com.webchatOil.action.activtiyAction" method="doTest"></action>
  <!-- 微信乐淘用户管理 -->
        <action name="doCheckUser" class="com.webchatOil.action.userManagerAction" method="doCheckUser"></action>
        <action name="doGetUser" class="com.webchatOil.action.userManagerAction" method="doGetUser"></action>
