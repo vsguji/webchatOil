@@ -49,6 +49,12 @@ public class WeChat {
     private static final String GET_MEDIA_URL = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=";
     private static final String UPLOAD_MEDIA_URL = "http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=";
     private static final String JSAPI_TICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=";
+    // 新增其他类型永久素材
+    private static final String  UPLOAD_add_material ="https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=";
+    // 上传图文消息内的图片获取URL 
+    private static final String UPLOAD_uploadimg = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=";
+    // 新增永久图文素材
+    private static final String UPLOAD_add_news = "https://api.weixin.qq.com/cgi-bin/material/add_news?access_token=";
     private static Class<?> messageProcessingHandlerClazz = null;
     /**
      * 消息操作接口
@@ -91,6 +97,20 @@ public class WeChat {
         return map.get("access_token").toString();
     }
 
+    
+    /**
+     * 获取access_token
+     *
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, Object> getAccessTokenMap() throws Exception {
+        String appid = ConfKit.get("AppId");
+        String secret = ConfKit.get("AppSecret");
+        String jsonStr = HttpKit.get(ACCESSTOKEN_URL.concat("&appid=") + appid + "&secret=" + secret);
+        Map<String, Object> map = JSONObject.parseObject(jsonStr);
+        return map;
+    }
     /**
      * 获取access_token
      *
@@ -278,6 +298,33 @@ public class WeChat {
         String jsonStr = HttpKit.upload(url, file);
         return JSON.parseObject(jsonStr, Map.class);
     }
+    
+    
+    /**
+     * 新增其他类型永久素材
+     *
+     * @param type
+     * @param file
+     * @return
+     * @throws KeyManagementException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchProviderException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
+    @SuppressWarnings("unchecked")
+   	public static Map<String, Object> uploadOtherMedia(String accessToken, String type, String filePath) throws KeyManagementException, NoSuchAlgorithmException, NoSuchProviderException, IOException, ExecutionException, InterruptedException {
+           String url = UPLOAD_add_material + accessToken;
+           Map<String, String> textMap = new HashMap<String, String>(); 
+           textMap.put("type", type); 
+           Map<String, String> fileMap = new HashMap<String, String>(); 
+           fileMap.put("media", filePath); 
+              
+           String jsonStr = HttpKit.uploadOtherMaterial(url, textMap, fileMap);
+           return JSON.parseObject(jsonStr, Map.class);
+       }
+    
 
     /**
      * 获得jsapi_ticket（有效期7200秒)

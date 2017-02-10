@@ -2,16 +2,27 @@ package com.derrick.util;
 
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import javax.activation.MimetypesFileTypeMap;
 
 import com.alibaba.fastjson.JSON;
 import com.derrick.WeChat;
@@ -140,6 +151,142 @@ public class HttpKit {
         return body;
     }
 
+    /**
+     * 新增其他类型永久素材
+     *
+     * @param url
+     * @param file
+     * @return
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchProviderException
+     * @throws KeyManagementException
+     */
+    public static String uploadOtherMaterial(String urlStr, Map<String, String> textMap, 
+            Map<String, String> fileMap) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, KeyManagementException, ExecutionException, InterruptedException {
+    	String res = ""; 
+        HttpURLConnection conn = null; 
+        String BOUNDARY = "----WebKitFormBoundaryiDGnV9zdZA1eM1yL"; //boundary就是request头和上传文件内容的分隔符 
+        try { 
+            URL url = new URL(urlStr); 
+            conn = (HttpURLConnection) url.openConnection(); 
+            conn.setConnectTimeout(5000); 
+            conn.setReadTimeout(30000); 
+            conn.setDoOutput(true); 
+            conn.setDoInput(true); 
+            conn.setUseCaches(false); 
+            conn.setRequestMethod("POST"); 
+            conn.setRequestProperty("Connection", "Keep-Alive"); 
+            conn.setRequestProperty("User-Agent", 
+                            "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36"); 
+            conn.setRequestProperty("Content-Type", 
+                    "multipart/form-data; boundary=" + BOUNDARY); 
+   
+            OutputStream out = new DataOutputStream(conn.getOutputStream()); 
+            // text 
+            if (textMap != null) { 
+                StringBuffer strBuf = new StringBuffer(); 
+                Iterator iter = textMap.entrySet().iterator(); 
+                while (iter.hasNext()) { 
+                    Map.Entry entry = (Map.Entry) iter.next(); 
+                    String inputName = (String) entry.getKey(); 
+                    String inputValue = (String) entry.getValue(); 
+                    if (inputValue == null) { 
+                        continue; 
+                    } 
+                    strBuf.append("\r\n").append("--").append(BOUNDARY).append( 
+                            "\r\n"); 
+                    strBuf.append("Content-Disposition: form-data; name=\"" 
+                            + inputName + "\"\r\n\r\n"); 
+                    strBuf.append(inputValue); 
+                } 
+                out.write(strBuf.toString().getBytes()); 
+            } 
+   
+            // file 
+            if (fileMap != null) { 
+                Iterator iter = fileMap.entrySet().iterator(); 
+                while (iter.hasNext()) { 
+                    Map.Entry entry = (Map.Entry) iter.next(); 
+                    String inputName = (String) entry.getKey(); 
+                    String inputValue = (String) entry.getValue(); 
+                    if (inputValue == null) { 
+                        continue; 
+                    } 
+                    File file = new File(inputValue); 
+                    String filename = file.getName(); 
+                    String contentType = new MimetypesFileTypeMap() 
+                            .getContentType(file); 
+                    
+                    boolean fileType = false; // 上传视频素材时需要POST另一个表单，默认为 非视频素材
+                    if (filename.endsWith(".png")) { 
+                        contentType = "image/png"; 
+                    } 
+                    else if (filename.endsWith(".mp4")){
+                    	fileType = true;
+                    	contentType = "video/mp4";
+                    }
+                    if (contentType == null || contentType.equals("")) { 
+                        contentType = "application/octet-stream"; 
+                    } 
+   
+                    StringBuffer strBuf = new StringBuffer(); 
+                    strBuf.append("\r\n").append("--").append(BOUNDARY).append( 
+                            "\r\n"); 
+                    strBuf.append("Content-Disposition: form-data; name=\"" 
+                            + inputName + "\"; filename=\"" + filename 
+                            + "\"\r\n"); 
+                    strBuf.append("Content-Type:" + contentType + "\r\n\r\n"); 
+                    out.write(strBuf.toString().getBytes()); 
+   
+                    if (fileType){ // 视频素材
+                    	String title = fileMap.get("title");
+                    	String introduction = fileMap.get("introduction");
+                    	out.write(("--" + BOUNDARY + "\r\n").getBytes());
+                    	out.write("Content-Disposition: form-data; name=\"description\";\r\n\r\n".getBytes());
+                    	out.write(String.format("{\"title\":\"%s\", \"introduction\":\"%s\"}",title,introduction).getBytes());
+                    	out.write(("\r\n--" + BOUNDARY + "--\r\n\r\n").getBytes());
+                    }
+                    
+                    DataInputStream in = new DataInputStream( 
+                            new FileInputStream(file)); 
+                    int bytes = 0; 
+                    byte[] bufferOut = new byte[1024]; 
+                    while ((bytes = in.read(bufferOut)) != -1) { 
+                        out.write(bufferOut, 0, bytes); 
+                    } 
+                    in.close(); 
+                } 
+            } 
+   
+            byte[] endData = ("\r\n--" + BOUNDARY + "--\r\n").getBytes(); 
+            out.write(endData); 
+            out.flush(); 
+            out.close(); 
+   
+            // 读取返回数据 
+            StringBuffer strBuf = new StringBuffer(); 
+            BufferedReader reader = new BufferedReader(new InputStreamReader( 
+                    conn.getInputStream())); 
+            String line = null; 
+            while ((line = reader.readLine()) != null) { 
+                strBuf.append(line).append("\n"); 
+            } 
+            res = strBuf.toString(); 
+            reader.close(); 
+            reader = null; 
+        } catch (Exception e) { 
+            System.out.println("发送POST请求出错。" + urlStr); 
+            e.printStackTrace(); 
+        } finally { 
+            if (conn != null) { 
+                conn.disconnect(); 
+                conn = null; 
+            } 
+        } 
+        return res; 
+    } 
+    
     /**
      * 下载资源
      *

@@ -3,12 +3,17 @@ package com.webchatOil.action;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -108,45 +113,48 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	 */
 	
 	public void setupMenu(String userid) throws Exception{
-	   String accessToken = WeChat.getAccessToken();
-	   Map<String, Object> map1 = new HashMap<String, Object>();
-	   map1.put("access_token", accessToken);
-	   WeChat.webAuth.setAccessToken(map1);
-	   Menu menu = WeChat.menu; 
-	   // 创建按钮
-	   Data4Button btn = null;
-//	  String userid0 = "oy-F2t1TtETlOjqXkAJG6whKY9nQ";
-	   if (isExist(userid) == false){ // 用户不存在，添加新用户
-		   // 1.拉取客户基本信息
-		   UserInfo baseInfo = WeChat.user.getUserInfo(accessToken, userid);
-		   LKUserinfo newLkUserinfo = new LKUserinfo();
-		   newLkUserinfo.setWechatID(baseInfo.getOpenid());
-		   newLkUserinfo.setE_name(baseInfo.getNickname());
-		   newLkUserinfo.setWechatPic(baseInfo.getHeadimgurl());
-		   newLkUserinfo.setSex(Integer.toString( baseInfo.getSex()));
-		   newLkUserinfo.setPopedom("employee");
-		   userService.insertNewUser(newLkUserinfo);
-		   btn = build2Items();
-		   logger.log(Priority.DEBUG, "添加新目标用户");
-	   }
-	   else {
-		   String userTypeString = getUserType(userid).trim();
-		   if (userTypeString.equals("admin")) {
-			   btn = buildI1tems();
-		   }
-		   else if (userTypeString.equals("employee")) {
+		 Map<String, Object>  accessTokenMap = WeChat.getAccessTokenMap();
+			if (WeChat.webAuth.getSaveToken() != null && WeChat.webAuth.getSaveToken().isExpire()){
+				String refreshToken = WeChat.webAuth.getRefreshToken(WeChat.webAuth.getSaveToken().getAccess_token());
+				accessTokenMap.replace(refreshToken, refreshToken);
+			}
+			WeChat.webAuth.setAccessToken(accessTokenMap);
+		
+		   // 创建按钮
+		   Data4Button btn = null;
+//		  String userid0 = "oy-F2t1TtETlOjqXkAJG6whKY9nQ";
+		   if (isExist(userid) == false){ // 用户不存在，添加新用户
+			   // 1.拉取客户基本信息
+			   UserInfo baseInfo = WeChat.user.getUserInfo(WeChat.webAuth.getSaveToken().getAccess_token(), userid);
+			   LKUserinfo newLkUserinfo = new LKUserinfo();
+			   newLkUserinfo.setWechatID(baseInfo.getOpenid());
+			   newLkUserinfo.setE_name(baseInfo.getNickname());
+			   newLkUserinfo.setWechatPic(baseInfo.getHeadimgurl());
+			   newLkUserinfo.setSex(Integer.toString( baseInfo.getSex()));
+			   newLkUserinfo.setPopedom("employee");
+			   userService.insertNewUser(newLkUserinfo);
 			   btn = build2Items();
+			   logger.log(Priority.DEBUG, "添加新目标用户");
 		   }
-	   }
-	   // Object -> json
-	   if (btn != null) {
-		   String menus = JSON.toJSONString(btn);
-		   menu.createMenu(accessToken, menus);
-		   System.out.println(menu.createMenu(accessToken, menus));
-	   }
-	   else {
-		   System.out.println("error");
-	   }
+		   else {
+			   String userTypeString = getUserType(userid).trim();
+			   if (userTypeString.equals("admin")) {
+				   btn = buildI1tems();
+			   }
+			   else if (userTypeString.equals("employee")) {
+				   btn = build2Items();
+			   }
+		   }
+		   // 创建菜单项
+		   if (btn != null) {
+			   Menu menu = WeChat.menu; 
+			   String menus = JSON.toJSONString(btn);
+			   menu.createMenu(WeChat.webAuth.getSaveToken().getAccess_token(), menus);
+			   System.out.println(menu.createMenu(WeChat.webAuth.getSaveToken().getAccess_token(), menus));
+		   }
+		   else {
+			   System.out.println("error");
+		   }
 	}
 	
 	/*
@@ -302,10 +310,76 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	/*
 	 * 测试方式
 	 */
-	public void doTest(){
+	public void doTest() throws ServletException, IOException{
 		   String path = this.getClass().getResource("/").getPath() + "images/huangdou.jpg";
-		   System.out.println("path:" + path);
 		    File file1 = new File(path);
 		    System.out.println(file1.exists());
+		    request.getRequestDispatcher("/jsp/feed/members.jsp").forward(request, response);
 	   }
+	
+	/*
+	 * 上传永久图片素材
+	 */
+	public void uploadMedia() {
+		String accessTokenString = "EvogJPq1eHHFj9X4uu2OpMjU6RtYXpHORhKjPHfHgJAWI1yCRMraI1PYZE8iWCEJwUHN8Jot0mucn2KKhIyaxJ2TBqTKxz-lRhvqSyEAyrUAPUdAHAODI";
+		String filePath = this.getClass().getResource("/").getPath() + "images/huangdou.jpg";
+		try {
+			Map<String, Object> resultMap = WeChat.uploadOtherMedia(accessTokenString, "image", filePath);
+			System.out.println("result : " + resultMap);
+		} catch (KeyManagementException | NoSuchAlgorithmException
+				| NoSuchProviderException | IOException | ExecutionException
+				| InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * 上传永久视频素材
+	 */
+	public void uploadMediaVideo(){
+		
+	}
+	
+	/*
+	 * 获取永久素材列表
+	 */
+	public void getMediaLists(){
+		
+	}
+	
+	/*
+	 * 获取永久素材总数 
+	 */
+	public void getMediaCount(){
+		
+	}
+	
+	/*
+	 * 获取临时素材
+	 */
+	public void getTemporeMedia(){
+		
+	}
+	
+	/*
+	 * 新增临时素材
+	 */
+	public void addTemporeMedia(){
+		
+	}
+	
+	/*
+	 * 删除临时素材
+	 */
+	public void deleteTemporeMedia(){
+		
+	}
+	
+	/*
+	 * 修改临时素材
+	 */
+	public void modifyTemporeMedia(){
+		
+	}
 }

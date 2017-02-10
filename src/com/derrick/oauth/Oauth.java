@@ -134,7 +134,7 @@ public class Oauth {
      * 本地json 转 javaBean
      * @return
      */
-    public static WebAccessToken getSaveToken(){
+    public WebAccessToken getSaveToken(){
     	String path = localPath();
     	path += "token.json";
     	String savedObj = JsonUtils.readJson(path);
