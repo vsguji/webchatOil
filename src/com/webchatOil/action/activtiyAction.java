@@ -314,7 +314,7 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 		   String path = this.getClass().getResource("/").getPath() + "images/huangdou.jpg";
 		    File file1 = new File(path);
 		    System.out.println(file1.exists());
-		    request.getRequestDispatcher("/jsp/feed/members.jsp").forward(request, response);
+		   // request.getRequestDispatcher("/jsp/feed/members.jsp").forward(request, response);
 	   }
 	
 	/*
