@@ -310,11 +310,12 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	/*
 	 * 测试方式
 	 */
-	public void doTest() throws ServletException, IOException{
+	public String doTest() throws ServletException, IOException{
 		   String path = this.getClass().getResource("/").getPath() + "images/huangdou.jpg";
 		    File file1 = new File(path);
 		    System.out.println(file1.exists());
 		   // request.getRequestDispatcher("/jsp/feed/members.jsp").forward(request, response);
+		    return "success";
 	   }
 	
 	/*

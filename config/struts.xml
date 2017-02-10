@@ -11,6 +11,7 @@
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<constant name="struts.configuration.xml.reload" value="true" />
 	<constant name="struts.multipart.maxSize" value="1073741824" />
+	<constant name="struts.devMode" value="true" /> <!-- 表明处于开发模式 -->
 	<constant name="struts.action.excludePattern" value="/static/.*?" />
 <package name="welcome" extends="struts-default"> 
 <!-- 欢迎管理 -->
@@ -22,7 +23,7 @@
      <action name="doGet" class="com.webchatOil.action.activtiyAction" method="doGet"></action>
      <action name="recAuthAction" class="com.webchatOil.action.activtiyAction" method="recAuthAction"></action>
      <action name="doTest" class="com.webchatOil.action.activtiyAction" method="doTest">
-       <result>/jsp/feed/members.jsp</result> 
+       <result name="success">/jsp/feed/members.jsp</result> 
      </action>
  <!-- 微信乐淘用户管理 -->
        <action name="doCheckUser" class="com.webchatOil.action.userManagerAction" method="doCheckUser"></action>
