@@ -30,19 +30,26 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 
 	private OutMessage outMessage;
 	private Logger logger = Logger.getLogger(DefaultMessageProcessingHandlerImpl.class);
+	private static List<Long> msgids = ConfKit.msgsList();
 	
 	@Override
 	public void allType(InMessage msg){
-	 switch (msg.getMsgType()) {
-	    case "event":
-	    	eventTypeMsg(msg);
-		   break;
-	    case "text":
-	    	textTypeMsg(msg);
-	      break;    
-    	default:
-		  break;
-	   }
+		if (msgids.contains(msg.getMsgId()) == false){
+			 switch (msg.getMsgType()) {
+			    case "event":
+			    	eventTypeMsg(msg);
+				   break;
+			    case "text":
+			    	textTypeMsg(msg);
+			      break;    
+		    	default:
+				  break;
+			 }
+		}
+		else {
+			 System.out.println("重复消息 ： " + msg.getMsgId() + ":" + msg.getMsgId());
+		}
+		 msgids.add(msg.getMsgId());
 	}
 	
 	@Override
@@ -58,19 +65,19 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 					 mapToken.put("access_token", accessToken);
 					 WeChat.webAuth.setAccessToken(mapToken);
 				}
-				String filePath = this.getClass().getResource("/").getPath() + "static/image/huangdou.jpg";
+				String filePath = this.getClass().getResource("/").getPath() + "images/huangdou.jpg";
 				Map<String, Object> backMap = WeChat.uploadOtherMedia(accessToken, "image", filePath);
 				String weixinPicUrl = (String) backMap.get("url");
 				System.out.println(backMap);
 				NewsOutMessage newMsg = new NewsOutMessage();
 				newMsg.setTitle("Hello world");
 				List<Articles> list = new ArrayList<Articles>();
-				Articles at1 = new Articles();
-				at1.setTitle("Hello world Title");
-				at1.setDescription("Hello world SubTitle");
-				at1.setPicUrl(weixinPicUrl);
-				at1.setUrl("http://www.baidu.com");
-				list.add(at1);
+				Articles sendArt = new Articles();
+				sendArt.setTitle("Hello world Title");
+				sendArt.setDescription("Hello world SubTitle");
+				sendArt.setPicUrl(weixinPicUrl);
+				sendArt.setUrl("http://www.baidu.com");
+				list.add(sendArt);
 				newMsg.setArticles(list);
 				setOutMessage(newMsg);
 			} catch (Exception e) {
@@ -118,8 +125,6 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 
 	@Override
 	public void eventTypeMsg(InMessage msg) {
-		System.out.println(msg.getEvent());
-		System.out.println(msg.getEventKey());
 	    switch (msg.getEvent()) {
 		case "LOCATION":
 			break;
@@ -128,7 +133,7 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 			 ConfKit.eventSource.notifyListenerEventWithMessage(msg);
 			// 订阅频道
 			TextOutMessage out = new TextOutMessage();
-			out.setContent("感谢您的关注,༺乐淘༻为你服务.");
+			out.setContent("感谢您的关注,༺乐淘༻为您服务.");
 			setOutMessage(out);
 			break;
 		case "unsubscribe":// 取消订阅频道  删除历史消息

@@ -1,6 +1,8 @@
 package com.webchatOil.util;
 import java.io.*;
 
+import net.sf.json.JSONObject;
+
 public class JsonUtils {
 	 //从给定位置读取Json文件
     public static String readJson(String path){
@@ -62,4 +64,9 @@ public class JsonUtils {
         }
 //        System.out.println("文件写入成功！");
     }
+    
+    public static boolean isJson(String value) { 
+    	JsonValidator jsonValid = new JsonValidator();
+    	return jsonValid.validate(value);
+   }
 }

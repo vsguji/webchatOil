@@ -17,6 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 import org.apache.struts2.components.Debug;
+import org.apache.xmlbeans.impl.xb.xmlconfig.ConfigDocument.Config;
 
 import com.webchatOil.Test.Demo;
 import com.webchatOil.action.BaseAction;
@@ -114,12 +117,11 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	
 	public void setupMenu(String userid) throws Exception{
 		 Map<String, Object>  accessTokenMap = WeChat.getAccessTokenMap();
-			if (WeChat.webAuth.getSaveToken() != null && WeChat.webAuth.getSaveToken().isExpire()){
+			WeChat.webAuth.setAccessToken(accessTokenMap);
+			if (WeChat.webAuth.getSaveToken().getAccess_token() != null && WeChat.webAuth.getSaveToken().isExpire()){
 				String refreshToken = WeChat.webAuth.getRefreshToken(WeChat.webAuth.getSaveToken().getAccess_token());
 				accessTokenMap.replace(refreshToken, refreshToken);
 			}
-			WeChat.webAuth.setAccessToken(accessTokenMap);
-		
 		   // 创建按钮
 		   Data4Button btn = null;
 //		  String userid0 = "oy-F2t1TtETlOjqXkAJG6whKY9nQ";
@@ -161,11 +163,16 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	 * 底部菜单项1 admin,manage
 	 */
 	 public Data4Button buildI1tems() throws WeixinSubMenuOutOfBoundException, WeixinMenuOutOfBoundException{
-		   String path = ConfKit.baseUrlString;
+		   String urlPath = ConfKit.baseUrlString;
+		   String localPath = ConfKit.getLocalPath();
+		   String fullLocalPath = localPath + "jsp/feed/members.jsp";
+		   String fullUrlPath = urlPath + "jsp/feed/members.jsp";
+		   System.out.println("fullLocalPath: " + fullLocalPath);
+		   System.out.println("fullUrlPath: " + fullUrlPath);
 		   Data4Button btn = new Data4Button();
-		   Data4Menu menu1 = new Data4Menu("view", "供求列表","http://www.baidu.com");
+		   Data4Menu menu1 = new Data4Menu("view", "供求列表",fullUrlPath);
 		   Data4Menu menu2 = new Data4Menu("view", "发布商品", "http://www.baidu.com");
-		   Data4Menu menu3 = new Data4Menu("view", "客户列表", path + "");
+		   Data4Menu menu3 = new Data4Menu("view", "客户列表", urlPath + "");
 		   btn.addMenu(menu1);
 		   btn.addMenu(menu2);
 		   btn.addMenu(menu3);
@@ -310,11 +317,15 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	/*
 	 * 测试方式
 	 */
-	public String doTest() throws ServletException, IOException{
+	public String doTest() throws ServletException, IOException, KeyManagementException, NoSuchAlgorithmException, NoSuchProviderException, InterruptedException, ExecutionException{
 		   String path = this.getClass().getResource("/").getPath() + "images/huangdou.jpg";
 		    File file1 = new File(path);
 		    System.out.println(file1.exists());
 		   // request.getRequestDispatcher("/jsp/feed/members.jsp").forward(request, response);
+		    // jssdk 验证
+		    String accessToken = WeChat.webAuth.getSaveToken().access_token;
+		    String jsptickect = WeChat.getTicket(accessToken).toString();
+		    System.out.println("jsptickect : " + jsptickect);
 		    return "success";
 	   }
 	

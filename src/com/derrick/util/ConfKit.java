@@ -2,8 +2,9 @@ package com.derrick.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
-
+import java.util.List;
 import com.webchatOil.util.EventListenerSource;
 /**
  * 
@@ -39,4 +40,13 @@ public class ConfKit {
     public static void setProps(Properties p){
         props = p;
     }
+    
+    public static String getLocalPath (){
+    	return Thread.currentThread().getContextClassLoader().getResource("/").getPath();
+    }
+    
+	public static List<Long> msgsList() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Long>(); // 等待改进
+	}
 }

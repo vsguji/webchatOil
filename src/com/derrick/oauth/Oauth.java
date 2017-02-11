@@ -1,5 +1,6 @@
 package com.derrick.oauth;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 
+import com.alibaba.fastjson.JSON;
 import com.derrick.util.ConfKit;
 import com.derrick.util.HttpKit;
 import com.webchatOil.util.JsonUtils;
@@ -126,7 +128,7 @@ public class Oauth {
     	WebAccessToken tokenObj = (WebAccessToken)JSONObject.toBean(object, WebAccessToken.class);
     	// 存储json 到本地
     	String path = Oauth.localPath();
-    	JsonUtils.writeJson(path, token, "token");
+    	JsonUtils.writeJson(path, object, "token");
     	accessToken = tokenObj;
     }
    
@@ -138,9 +140,15 @@ public class Oauth {
     	String path = localPath();
     	path += "token.json";
     	String savedObj = JsonUtils.readJson(path);
-    	JSONObject object = new JSONObject();
-    	WebAccessToken tokenObj = (WebAccessToken)JSONObject.toBean(object, WebAccessToken.class);
-		return tokenObj;
+    	if (JsonUtils.isJson(savedObj)){
+    		JSONObject object = JSONObject.fromObject(savedObj);
+        	WebAccessToken tokenObj = (WebAccessToken)JSONObject.toBean(object, WebAccessToken.class);
+    		return tokenObj;	
+    	}
+    	else {
+    		System.out.println("error json :" + savedObj );
+    	}
+    	return null;
     }
     
     /**
@@ -148,6 +156,6 @@ public class Oauth {
      */
     @SuppressWarnings("unused")
 	public static String localPath(){
-    	return Thread.currentThread().getContextClassLoader().getResource("").getPath();
+    	return Thread.currentThread().getContextClassLoader().getResource("/").getPath();
     }
 }
