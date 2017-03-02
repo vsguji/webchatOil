@@ -38,6 +38,7 @@ public class Oauth {
     private String secret;
   
     public static WebAccessToken accessToken;
+    public static jspTicketAccessToken ticketToken;
     
     public Oauth() {
         super();
@@ -122,6 +123,7 @@ public class Oauth {
     
     /**
      * access_token map 转 javaBean
+     * 缓存全局 access_token
      */
     public void setAccessToken(Map<String, Object> token){
     	JSONObject object =JSONObject.fromObject(token);
@@ -147,6 +149,40 @@ public class Oauth {
     	}
     	else {
     		System.out.println("error json :" + savedObj );
+    	}
+    	return null;
+    }
+    
+    /*
+     * jsapi_ticket map 转 javaBean
+     * 缓存全局 ticket 
+     */
+    public void setTicket(Map<String, Object> ticket){
+    	JSONObject object =JSONObject.fromObject(ticket);
+    	jspTicketAccessToken ticketObj = (jspTicketAccessToken)JSONObject.toBean(object, jspTicketAccessToken.class);
+    	// 存储json 到本地
+    	String path = Oauth.localPath();
+    	JsonUtils.writeJson(path, object, "ticket");
+    	ticketToken = ticketObj;
+    }
+    
+    /*
+     * 获取 ticket 
+     */
+    public jspTicketAccessToken getSaveTicket(){
+    	String path = localPath();
+    	path += "ticket.json";
+    	File file = new File(path);
+    	if (file.exists()){ 
+    		String savedObj = JsonUtils.readJson(path);
+        	if (JsonUtils.isJson(savedObj)){
+        		JSONObject object = JSONObject.fromObject(savedObj);
+        		jspTicketAccessToken ticketObj = (jspTicketAccessToken)JSONObject.toBean(object, jspTicketAccessToken.class);
+        		return ticketObj;	
+        	}
+        	else {
+        		System.out.println("error json :" + savedObj );
+        	}
     	}
     	return null;
     }

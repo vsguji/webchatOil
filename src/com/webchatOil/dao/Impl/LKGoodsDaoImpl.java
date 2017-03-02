@@ -2,11 +2,9 @@ package com.webchatOil.dao.Impl;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.HibernateTemplate;
@@ -14,22 +12,20 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.webchatOil.dao.LKUserListDao;
-import com.webchatOil.model.LKUserinfo;
+import com.webchatOil.dao.LKGoodsDao;
+import com.webchatOil.model.LKGoodsInfo;
+import com.webchatOil.model.LKGoodsPic;
 
 @Repository
 @Transactional
-public class LKUserListDaoImpl extends HibernateDaoSupport implements LKUserListDao {
+public class LKGoodsDaoImpl extends HibernateDaoSupport implements LKGoodsDao{
 
 	@Autowired
 	HibernateTemplate hibernateTemplate;
 	
-	/**
-	 * 获取全部客户列表
-	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List getAllUsers(String hql, int offset, int length) {
+	public List getAllGoods(String hql, int offset, int length) {
 		// TODO Auto-generated method stub
 		return (List) hibernateTemplate.execute(new HibernateCallback() {
 			@Override
@@ -41,17 +37,13 @@ public class LKUserListDaoImpl extends HibernateDaoSupport implements LKUserList
 				return list;
 			}
 		});
-	}	
+	}
 
-	/**
-	 * 获取单个客户
-	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List getSingleUserInfo(String hql, String userID) {
+	public List getSingleGoodInfo(String hql, String goodID) {
 		// TODO Auto-generated method stub
-		List list = (List)hibernateTemplate.find(hql, userID);
-		return list;
+		return (List)hibernateTemplate.find(hql, goodID);
 	}
 
 	@Override
@@ -60,53 +52,51 @@ public class LKUserListDaoImpl extends HibernateDaoSupport implements LKUserList
 		return hibernateTemplate.find(hql).size();
 	}
 
-	
-	
-	/**
-	 * 新客户
-	 * @return
-	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public boolean insertNewUser(LKUserinfo user) {
-		// TODO Auto-generated method stub
-		return	(boolean) hibernateTemplate.execute(new HibernateCallback() {
-					public Object doInHibernate(Session session) throws HibernateException {
-						session.save(user);
-						return true;
-					}
-				});
-}
-	
-	/**
-	 * 更新客户信息
-	 * @return 
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public boolean updateNewUser(LKUserinfo user){
+	public boolean insertNewGood(LKGoodsInfo good) {
 		// TODO Auto-generated method stub
 		return (boolean) hibernateTemplate.execute(new HibernateCallback() {
-					public Object doInHibernate(Session session) throws HibernateException {
-						session.update(user);
-						return true;
-					}
-				});
-	}
-	
-	/**
-	 * 删除客户信息
-	 * @return 
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public boolean deleteNewUser(LKUserinfo user){
-		// TODO Auto-generated method stub
-		return	(boolean) hibernateTemplate.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException {
-				session.delete(user);
+				session.save(good);
 				return true;
 			}
 		});
-	}	
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public boolean updateNewGood(LKGoodsInfo good) {
+		// TODO Auto-generated method stub
+		return (boolean) hibernateTemplate.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException {
+				session.update(good);
+				return true;
+			}
+		});
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public boolean deleteNewGood(LKGoodsInfo good) {
+		// TODO Auto-generated method stub
+		return (boolean) hibernateTemplate.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException {
+				session.delete(good);
+				return true;
+			}
+		});
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public boolean insertGoodsPic(LKGoodsPic goodPic) {
+		// TODO Auto-generated method stub
+		return (boolean) hibernateTemplate.execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException {
+				session.save(goodPic);
+				return true;
+			}
+		});
+	}
 }

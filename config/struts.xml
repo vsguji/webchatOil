@@ -7,18 +7,23 @@
 <struts> 
     <constant name="struts.server.static.browserCache" value="false" />
 	<constant name="struts.ui.theme" value="simple" />
-	<constant name="struts.devMode" value="false" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<constant name="struts.configuration.xml.reload" value="true" />
 	<constant name="struts.multipart.maxSize" value="1073741824" />
 	<constant name="struts.devMode" value="true" /> <!-- 表明处于开发模式 -->
 	<constant name="struts.action.excludePattern" value="/static/.*?" />
-<package name="welcome" extends="struts-default"> 
+	<constant name="struts.action.extension" value="action,do,html,," />
+<package name="welcome" extends="struts-default">
+    <interceptors>
+      <interceptor name="requestType" class="com.webchatOil.util.RequestTypeInterceptor" />
+    </interceptors>
+
 <!-- 欢迎管理 -->
     <action name="welcome" class="com.webchatOil.action.WelcomeAction"> 
      <result name="input">/jsp/error.jsp</result> 
      <result name="success">success.jsp</result> 
     </action> 
+   
  <!-- 微信授权管理  -->
      <action name="doGet" class="com.webchatOil.action.activtiyAction" method="doGet"></action>
      <action name="recAuthAction" class="com.webchatOil.action.activtiyAction" method="recAuthAction"></action>
@@ -27,7 +32,10 @@
      </action>
  <!-- 微信乐淘用户管理 -->
        <action name="doCheckUser" class="com.webchatOil.action.userManagerAction" method="doCheckUser"></action>
-       <action name="doGetUser" class="com.webchatOil.action.userManagerAction" method="doGetUser"></action>
+       <action name="doGetUsers" class="com.webchatOil.action.userManagerAction" method="doGetUsers"></action>
+       <action name="getUserOpenid" class="com.webchatOil.action.userManagerAction" method="getUserOpenid">
+        <interceptor-ref name="requestType"/>
+	  </action>
        <action name="doGetUserWithElment" class="com.webchatOil.action.userManagerAction" method="doGetUserWithElment"></action>
        <action name="doRegsisterUser" class="com.webchatOil.action.userManagerAction" method="doRegsisterUser"></action>
        <action name="doRemoveOlderUser" class="com.webchatOil.action.userManagerAction" method="doRemoveOlderUser"></action>
@@ -40,8 +48,26 @@
  <!-- 微信乐淘供求信息管理 -->
      <action name="doHelp" class="com.webchatOil.action.advicesManagerAction" method="doHelp"></action>
  <!-- 微信乐淘粮食购销管理 -->
-	 <action name="doHelp" class="com.webchatOil.action.advicesManagerAction" method="doHelp"></action>	 
- <!-- 微信消息  -->	 
+	 <action name="doHelp" class="com.webchatOil.action.advicesManagerAction" method="doHelp"></action>	
+	 
+<!-- 微信中间代理 商品管理 -->	 
+	  <action name="insertGoods" class="com.webchatOil.action.GoodsManagerAction" method="insertGoods">
+	  <interceptor-ref name="requestType"/>
+	  <param name="json">json</param>
+	  <result name="input">404</result>
+	  </action>
+	  <action name="updateGoods" class="com.webchatOil.action.GoodsManagerAction" method="updateGoods"></action>
+	  <action name="getGoodsList" class="com.webchatOil.action.GoodsManagerAction" method="getGoodsList">
+	   <interceptor-ref name="requestType"/>
+	  </action>
+	  <action name="deleteNewGood" class="com.webchatOil.action.GoodsManagerAction" method="deleteNewGood"></action>
+	  <action name="insertGoodsPic" class="com.webchatOil.action.GoodsManagerAction" method="insertGoodsPic">
+	   <interceptor-ref name="requestType"/>
+	  </action>
+ <!-- 微信消息  -->
+     <action name="sendMessageToCustomers" class="com.webchatOil.action.MessgeMangerAction" method="sendMessageToCustomers">
+     <interceptor-ref name="requestType"/>
+     </action> 
 </package> 
 </struts> 
     

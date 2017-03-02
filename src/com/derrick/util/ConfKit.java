@@ -18,7 +18,8 @@ public class ConfKit {
 
 	private static Properties props = new Properties();
 	public static  int createMenuStatusCode = 0; //默认为0 未创建
-	public static  String baseUrlString = "http://a157d446.ngrok.io/webchatOil/";
+	public static  String baseUrlString = null; // 后端地址
+	public static  String baseUIString = null; // 前端地址
     public  static EventListenerSource eventSource = null;
 	static {
 		try {
@@ -26,6 +27,8 @@ public class ConfKit {
 			//props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("/wechat.properties"));
 			props.load(ConfKit.class.getResourceAsStream("/wechat.properties"));
 			eventSource = new EventListenerSource(); // 监听
+			baseUrlString = props.getProperty("baseUrl");
+			baseUIString = props.getProperty("baseUI");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

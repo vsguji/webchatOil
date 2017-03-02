@@ -27,6 +27,11 @@ public interface UserService {
 	public int getAllRowCount(String hql);
 	
 	/**
+	 * 获取全部客户
+	 */
+	public List<LKUserinfo> getAllUsers();
+	
+	/**
 	 * 新客户
 	 * @param user
 	 * 			新客户信息实体类

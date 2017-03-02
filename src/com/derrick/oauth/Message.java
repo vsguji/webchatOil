@@ -169,12 +169,14 @@ public class Message {
      * @throws Exception
      */
     public String SendNews(String accessToken, String openId, List<Articles> articles) throws Exception {
-        Map<String, Object> json = new HashMap<String, Object>();
-        json.put("touser", openId);
-        json.put("msgtype", "news");
-        json.put("voice", articles);
-        String result = sendMsg(accessToken, json);
-        return result;
+    	 Map<String, Object> json = new HashMap<String, Object>();
+         json.put("touser", openId);
+         json.put("msgtype", "news");
+         Map<String, Object> articlesMap = new HashMap<String, Object>();
+         articlesMap.put("articles", articles);
+         json.put("news", articlesMap);
+         String result = sendMsg(accessToken, json);
+         return result;
     }
 
     /**

@@ -1,11 +1,34 @@
+
+<%@page import="com.derrick.util.ConfKit"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.util.*"%>
 
-<%@ page import="com.derrick.*;"%> 
+<%@ page import="com.derrick.*"%> 
+<%@page import="com.webchatOil.action.jspSign"%>
 <%
 String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-Map<String, String> signMap = WeChat.jsApiSign("", basePath);
+HttpServletRequest requst = request;
+
+String basePath = ConfKit.baseUrlString;
+basePath = basePath.substring(0, basePath.length() - 1);
+
+String fullPath = request.getScheme()+"://"+request.getServerName()+path+request.getServletPath();
+String ticket = jspSign.getTicketToken();
+
+System.out.println("basePath : " + fullPath);
+System.out.println("ticket : " + ticket);
+
+Map<String, String> signMap = WeChat.jsApiSign(ticket, fullPath);
+String timestamp = signMap.get("timestamp");
+String nonceStr = signMap.get("nonceStr");
+String signature = signMap.get("signature");
+String appid = ConfKit.get("AppId");
+
+System.out.println("timestamp : " + timestamp );
+System.out.println("nonceStr : " + nonceStr );
+System.out.println("signature : " + signature);
+System.out.println("appid : " + appid );
+
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -38,7 +61,7 @@ Map<String, String> signMap = WeChat.jsApiSign("", basePath);
     <div class="lbox_close wxapi_form">
       <h3 id="menu-basic">基础接口</h3>
       <span class="desc">判断当前客户端是否支持指定JS接口</span>
-      <button class="btn btn_primary" id="checkJsApi">checkJsApi</button>
+      <button class="btn btn_primary" id="checkJsApi" value="checkJsApi">checkJsApi</button>
 
       <h3 id="menu-share">分享接口</h3>
       <span class="desc">获取“分享到朋友圈”按钮点击状态及自定义分享内容接口</span>
@@ -134,60 +157,32 @@ Map<String, String> signMap = WeChat.jsApiSign("", basePath);
 <script>
   wx.config({
       debug: true,
-      appId: 'wx0da440099a55eb1c',
-      timestamp: 1420774989,
-      nonceStr: '2nDgiWM7gCxhL8v0',
-      signature: '1f8a6552c1c99991fc8bb4e2a818fe54b2ce7687',
+      appId:"<%=appid%>",
+      timestamp:<%=timestamp%>,
+      nonceStr: "<%=nonceStr%>",
+      signature: "<%=signature%>",
       jsApiList: [
         'checkJsApi',
-        'onMenuShareTimeline',
-        'onMenuShareAppMessage',
-        'onMenuShareQQ',
-        'onMenuShareWeibo',
-        'hideMenuItems',
-        'showMenuItems',
-        'hideAllNonBaseMenuItem',
-        'showAllNonBaseMenuItem',
-        'translateVoice',
-        'startRecord',
-        'stopRecord',
-        'onRecordEnd',
-        'playVoice',
-        'pauseVoice',
-        'stopVoice',
-        'uploadVoice',
-        'downloadVoice',
-        'chooseImage',
-        'previewImage',
-        'uploadImage',
-        'downloadImage',
         'getNetworkType',
-        'openLocation',
-        'getLocation',
-        'hideOptionMenu',
-        'showOptionMenu',
-        'closeWindow',
-        'scanQRCode',
-        'chooseWXPay',
-        'openProductSpecificView',
-        'addCard',
-        'chooseCard',
-        'openCard'
+		'previewImage'
       ]
   });
   
   wx.ready(function(){
-	// 1 判断当前版本是否支持指定 JS 接口，支持批量判断
-   document.querySelector('#checkJsApi').onclick =function(){
-	wx.checkJsApi({
-	jsApiList:[
-	'getNetworkType',
-	'previewImage'
-	],
-	success:function(res){
-	   alert(JSON.stringify(res));
-	 }
-	});
+		// 1 判断当前版本是否支持指定 JS 接口，支持批量判断
+	   document.querySelector('#checkJsApi').onclick =function(){
+		wx.checkJsApi({
+		jsApiList:[	
+		'getNetworkType',
+		'previewImage'
+		],
+		success:function(res){
+		   alert(JSON.stringify(res));
+		 },
+		fail:function(res){
+			   alert(JSON.stringify(res));
+	      }
+	})}
  });
 </script>
 <script src="http://demo.open.weixin.qq.com/jssdk/js/api-6.1.js?ts=1420774989"> </script>

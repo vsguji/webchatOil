@@ -57,6 +57,7 @@ public class BaseAction extends ActionSupport implements ServletResponseAware, S
 		}
 		//android
 		response.setContentType("application/json;charset=utf-8");
+		response.setHeader("Access-Control-Allow-Origin","*");
 		return response;
 	}
 	

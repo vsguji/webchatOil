@@ -14,10 +14,18 @@ import com.derrick.WeChat;
 @SuppressWarnings("unused")
 public class jspSign {
 
-	public static String saveString (){
-		String access_token = WeChat.webAuth.getSaveToken().access_token;
+	public static String getTicketToken (){
+		 String ticketToken = null;
 		try {
-			Map obj = WeChat.getTicket(access_token);
+			String access_token = WeChat.getAccessTokenWhenIfIsExpire() ;
+			if (WeChat.webAuth.getSaveTicket() == null || WeChat.webAuth.getSaveTicket().getTicket() == null){
+				Map<String,Object> objMap = WeChat.getTicket(access_token);
+				WeChat.webAuth.setTicket(objMap);
+				ticketToken = (String)objMap.get("ticket");
+			}
+			else {
+				ticketToken = WeChat.getTicketTokenWhenIfIsExpire();
+			}
 		} catch (KeyManagementException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,6 +45,6 @@ public class jspSign {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "";
+		return ticketToken;
 	}
 }

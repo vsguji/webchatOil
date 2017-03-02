@@ -2,12 +2,9 @@ package com.webchatOil.action;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,27 +14,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
-import org.apache.struts2.components.Debug;
-import org.apache.xmlbeans.impl.xb.xmlconfig.ConfigDocument.Config;
 
-import com.webchatOil.Test.Demo;
 import com.webchatOil.action.BaseAction;
 import com.webchatOil.model.LKUserinfo;
 import com.webchatOil.po.page.PageBean;
 import com.webchatOil.service.UserService;
-import com.webchatOil.service.Impl.UserServiceBean;
 import com.webchatOil.util.EventListenerObject;
 import com.webchatOil.util.BarEventListener;
-import com.webchatOil.util.MapHandler;
 import com.alibaba.fastjson.JSON;
 import com.derrick.WeChatFilter;
 import com.derrick.WeChat;
@@ -117,7 +103,11 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	
 	public void setupMenu(String userid) throws Exception{
 		 Map<String, Object>  accessTokenMap = WeChat.getAccessTokenMap();
+		    if (userid.length() > 0){
+		    	accessTokenMap.put("openid", userid);
+		    }
 			WeChat.webAuth.setAccessToken(accessTokenMap);
+			
 			if (WeChat.webAuth.getSaveToken().getAccess_token() != null && WeChat.webAuth.getSaveToken().isExpire()){
 				String refreshToken = WeChat.webAuth.getRefreshToken(WeChat.webAuth.getSaveToken().getAccess_token());
 				accessTokenMap.replace(refreshToken, refreshToken);
@@ -169,12 +159,24 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 		   String fullUrlPath = urlPath + "jsp/feed/members.jsp";
 		   System.out.println("fullLocalPath: " + fullLocalPath);
 		   System.out.println("fullUrlPath: " + fullUrlPath);
+		   String uiString = ConfKit.baseUIString;
+		   String goodsString = uiString + "html/goods.html";
+		   String updateGoodsString = uiString + "html/goods/filesUpload/uploadGoods.html";
+		   String feedsString = uiString + "html/employees.html";
 		   Data4Button btn = new Data4Button();
 		   Data4Menu menu1 = new Data4Menu("view", "供求列表",fullUrlPath);
-		   Data4Menu menu2 = new Data4Menu("view", "发布商品", "http://www.baidu.com");
-		   Data4Menu menu3 = new Data4Menu("view", "客户列表", urlPath + "");
+		   Data4Menu menu2 = new Data4Menu("click", "发布商品", "goodsBtn");
+		   Data4Menu menu2_0 = new Data4Menu("view", "时间轴",goodsString);
+		   Data4Menu menu2_1 = new Data4Menu("view", "发布新商品",updateGoodsString);
+		   menu2.addSubMenu(menu2_0);
+		   menu2.addSubMenu(menu2_1);
+		   Data4Menu menu3 = new Data4Menu("click", "客户列表", "employeesBtn");
 		   btn.addMenu(menu1);
 		   btn.addMenu(menu2);
+		   Data4Menu menu3_0 = new Data4Menu("view", "供应商",feedsString);
+		   Data4Menu menu3_1 = new Data4Menu("view", "消费者",feedsString);
+		   menu3.addSubMenu(menu3_0);
+		   menu3.addSubMenu(menu3_1);
 		   btn.addMenu(menu3);
 		   return btn;
 	}
@@ -184,6 +186,8 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 	  */
 	 public Data4Button build2Items() throws WeixinSubMenuOutOfBoundException, WeixinMenuOutOfBoundException{
 		  String path = ConfKit.baseUrlString;
+		  String uiString = ConfKit.baseUIString;
+		  String goodsString = uiString + "html/goods.html";
 		  Data4Button btn = new Data4Button();
 		 // 创建一级菜单
 		   Data4Menu menu1 = new Data4Menu("click", "供求信息","Btn_0");
@@ -191,14 +195,14 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 		   Data4Menu menu3 = new Data4Menu("view", "意见留言",  path + "recAuthAction");
 		   // 创建二级菜单
 		   // 1.供求信息
-		   Data4Menu menu1_0 = new Data4Menu("view", "发布求购信息","http://www.baidu.com");
-		   Data4Menu menu1_1 = new Data4Menu("view", "发布出售信息", "http://www.baidu.com");
+		   Data4Menu menu1_0 = new Data4Menu("view", "发布求购信息",goodsString);
+		   Data4Menu menu1_1 = new Data4Menu("view", "发布出售信息", goodsString);
 		   menu1.addSubMenu(menu1_0);
 		   menu1.addSubMenu(menu1_1);
 		   // 2.粮食购销
-		   Data4Menu menu2_0 = new Data4Menu("view", "线上下单","http://www.baidu.com");
-		   Data4Menu menu2_1 = new Data4Menu("view", "扫码支付","http://www.baidu.com");
-		   Data4Menu menu2_2 = new Data4Menu("view", "历史记录","http://www.baidu.com");
+		   Data4Menu menu2_0 = new Data4Menu("view", "线上下单",goodsString);
+		   Data4Menu menu2_1 = new Data4Menu("view", "扫码支付",goodsString);
+		   Data4Menu menu2_2 = new Data4Menu("view", "历史记录",goodsString);
 		   menu2.addSubMenu(menu2_0);;
 		   menu2.addSubMenu(menu2_1);
 		   menu2.addSubMenu(menu2_2);
@@ -267,7 +271,7 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 			 // 获取用户基本信息 是用普通的 accessToken
 			 String accessTokenNormal = WeChat.getAccessToken();
 			 User currentUser = WeChat.user;
-			 UserInfo currentUserInfo = currentUser.getUserInfo(accessTokenNormal, createAuthOauth.accessToken.openid);
+			 UserInfo currentUserInfo = currentUser.getUserInfo(accessTokenNormal, createAuthOauth.accessToken.getOpenid());
 			 System.out.println(currentUserInfo.getNickname());
 			 request.setAttribute("snsUserInfo", currentUserInfo);
 //			 response.sendRedirect(request.getContextPath() + "/chatOil.jsp"); 
@@ -323,7 +327,7 @@ public class activtiyAction extends BaseAction implements BarEventListener {
 		    System.out.println(file1.exists());
 		   // request.getRequestDispatcher("/jsp/feed/members.jsp").forward(request, response);
 		    // jssdk 验证
-		    String accessToken = WeChat.webAuth.getSaveToken().access_token;
+		    String accessToken = WeChat.getAccessTokenWhenIfIsExpire();
 		    String jsptickect = WeChat.getTicket(accessToken).toString();
 		    System.out.println("jsptickect : " + jsptickect);
 		    return "success";

@@ -58,13 +58,7 @@ public class DefaultMessageProcessingHandlerImpl implements MessageProcessingHan
 		if (msgContentString.contains("大豆") == true){ // 商品存储表
 			String accessToken;
 			try {
-				accessToken = WeChat.webAuth.getSaveToken().access_token; 
-				if (accessToken == null) {
-					accessToken = WeChat.getAccessToken();
-					 Map<String, Object> mapToken = new HashMap<String, Object>();
-					 mapToken.put("access_token", accessToken);
-					 WeChat.webAuth.setAccessToken(mapToken);
-				}
+				accessToken = WeChat.getAccessTokenWhenIfIsExpire(); 
 				String filePath = this.getClass().getResource("/").getPath() + "images/huangdou.jpg";
 				Map<String, Object> backMap = WeChat.uploadOtherMedia(accessToken, "image", filePath);
 				String weixinPicUrl = (String) backMap.get("url");

@@ -1,32 +1,37 @@
 package com.webchatOil.service.Impl;
-import java.util.List;
 
-import com.webchatOil.dao.LKUserListDao;
-import com.webchatOil.model.LKUserinfo;
-import com.webchatOil.po.page.PageBean;
-import com.webchatOil.service.UserService;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service("userService")
-public class UserServiceBean implements UserService{
+import com.webchatOil.dao.LKGoodsDao;
+import com.webchatOil.model.LKGoodsInfo;
+import com.webchatOil.model.LKGoodsPic;
+import com.webchatOil.model.LKUserinfo;
+import com.webchatOil.po.page.PageBean;
+import com.webchatOil.service.GoodsService;
+import com.webchatOil.service.UserService;
 
+@Service("goodsService")
+public class GoodsServiceBean implements GoodsService{
+	
 	@Autowired
-	private LKUserListDao userDao;
+	private LKGoodsDao goodsDao;
 	
 	@Override
 	@Transactional
-	public PageBean getAllUsersInfo(int pageSize, int currentPage) {
+	public PageBean getAllGoodsInfo(int pageSize, int currentPage) {
+		
 		// TODO Auto-generated method stub
-		final String hql = "from LKUserinfo";
-		int allRow = userDao.getAllRowCount(hql);
+		final String hql = "from LKGoodsInfo";
+		int allRow = goodsDao.getAllRowCount(hql);
 		int totalPage = PageBean.countTotalPage(pageSize, allRow);
 		final int offset = PageBean.countOffset(pageSize, currentPage);
 		final int length = pageSize;
 		final int page = PageBean.countCurrentPage(currentPage);
-		List list = userDao.getAllUsers(hql, offset, length);
+		List list = goodsDao.getAllGoods(hql, offset, length);
 		PageBean pageBean = new PageBean();
 		pageBean.setPageSize(pageSize);
 		pageBean.setCurrentPage(page);
@@ -37,12 +42,11 @@ public class UserServiceBean implements UserService{
 		return pageBean;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public List getSingleUserInfo(String userID) {
+	public List getSingleGooderInfo(String byTime) {
 		// TODO Auto-generated method stub
-		final String hql = "from LKUserinfo where wechatID = ?";
-		return userDao.getSingleUserInfo(hql, userID);
+		final String hql = "from LKGoodsPic t where t.datetime = ?";
+		return goodsDao.getSingleGoodInfo(hql, byTime);
 	}
 
 	@Override
@@ -52,29 +56,27 @@ public class UserServiceBean implements UserService{
 	}
 
 	@Override
-	public boolean insertNewUser(LKUserinfo user) {
+	public boolean insertNewGoods(LKGoodsInfo good) {
 		// TODO Auto-generated method stub
-		return userDao.insertNewUser(user);
+		return goodsDao.insertNewGood(good);
 	}
 
 	@Override
-	public boolean updateNewUser(LKUserinfo user) {
+	public boolean updateNewGoods(LKGoodsInfo good) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean deleteNewUser(LKUserinfo user) {
+	public boolean deleteNewGoods(LKGoodsInfo good) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public List<LKUserinfo> getAllUsers() {
+	public boolean insertGoodsPic(LKGoodsPic goodPic) {
 		// TODO Auto-generated method stub
-		final String hql = "from LKUserinfo";
-		int allRow = userDao.getAllRowCount(hql);
-		List list = userDao.getAllUsers(hql, 0, allRow);
-		return list;
+		return goodsDao.insertGoodsPic(goodPic);
 	}
+
 }

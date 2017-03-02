@@ -1,11 +1,11 @@
 package com.derrick.oauth;
 
 public class WebAccessToken {
-   public  String access_token;
-   public  String refresh_token;
-   public  int expires_in;
-   public  String openid;
-   public  String scope;
+   private  String access_token;
+   private  String refresh_token;
+   private  int expires_in;
+   private  String openid;
+   private  String scope;
    private long timeStamp=System.currentTimeMillis()/1000;
    
     public String getAccess_token() {

@@ -9,6 +9,7 @@ public class jspTicketAccessToken {
 	private String errmsg;
 	private String ticket;
 	private int expires_in;
+	private long timeStamp=System.currentTimeMillis()/1000;
 	
 	public void setErrcode(int code){
 		this.errcode = code;
@@ -33,5 +34,9 @@ public class jspTicketAccessToken {
 	}
 	public int getExpires_in(){
 		return this.expires_in;
+	}
+	
+	public boolean isExpire(){
+		  return System.currentTimeMillis()/1000<(timeStamp+expires_in)?false:true;
 	}
 }

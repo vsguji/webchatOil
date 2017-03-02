@@ -123,6 +123,56 @@ public class WeChat {
         return map.get("access_token").toString();
     }
 
+    /*
+     * access_token 获取处理 (包含过期处里)
+     */
+    public static String getAccessTokenWhenIfIsExpire(){
+    	try {
+    		if (webAuth.getSaveToken().isExpire()) {
+    			System.out.println("accessToken 过期，调用 getRefreshToken 接口");
+    			String refreshToken = WeChat.webAuth.getRefreshToken(WeChat.webAuth.getSaveToken().getAccess_token());
+    			Map<String, Object> map = new HashMap<String, Object>();
+    			map.put("access_token", refreshToken);
+    			map.put("refresh_token", refreshToken);
+    			webAuth.setAccessToken(map);
+    			return (String) map.get("access_token");
+    		}
+    		else {
+    			System.out.println("accessToken 没有过期,调用缓存数据");
+    			return webAuth.getSaveToken().getAccess_token();
+    		}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return "";
+    }
+    
+    /*
+     * jsapi_ticket 获取处理 (包含过期处里)
+     */
+    public static String getTicketTokenWhenIfIsExpire(){
+    	try {
+    		if (webAuth.getSaveTicket().isExpire()) {
+    			System.out.println("ticket 过期，调用 getTicket 接口");
+    			Map<String, Object> map = getTicket(WeChat.webAuth.getSaveToken().getAccess_token());
+    			webAuth.setTicket(map);
+    			return (String) map.get("ticket");
+    		}
+    		else {
+    			System.out.println("accessToken 没有过期,调用缓存数据");
+    			return webAuth.getSaveTicket().getTicket();
+    		}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return "";
+    }
+    
+    
     /**
      * 支付反馈
      *

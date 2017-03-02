@@ -44,6 +44,7 @@ public class LKPPInfo implements Serializable {
    public void setPP_endTime(Time endTime){
 	   this.PP_endTime = endTime;
    }
+   
    public Time getPP_endTime(){
 	   return this.PP_endTime;
    }

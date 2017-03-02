@@ -1,21 +1,24 @@
 package com.webchatOil.model;
 
 import java.io.Serializable;
-import java.sql.Time;
-
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /** 
  *  商品信息表
  */
 @Entity
-@Table(name="LKGoodsInfo")
+@Table(name="tb_goodsinfo",schema ="wechatdb")		// 表名注解
 public class LKGoodsInfo implements Serializable {
-	private static final long serialVersionUID = 14L;
+	private static final long serialVersionUID = 15L;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int G_id; // 商品编号
 	private String G_name; // 商品名称
-	private Time G_time;  // 生产时间
+	private String G_time;  // 生产时间
 	private String G_spec; // 商品规格
 	private int  G_count; // 商品数量
 	private String G_remark; //备注
@@ -33,10 +36,10 @@ public class LKGoodsInfo implements Serializable {
 	public String getG_name(){
 		return this.G_name;
 	}
-	public void setG_time(Time time){
+	public void setG_time(String time){
 		this.G_time = time;
 	}
-	public Time getG_time(){
+	public String getG_time(){
 		return this.G_time;
 	}
 	

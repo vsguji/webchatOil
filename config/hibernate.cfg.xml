@@ -44,14 +44,20 @@
         <!-- 映射文件配置 -->
         <property name="annotatedClasses">  
             <list>  
-                <value>com.webchatOil.model.LKUserinfo</value>  
+                <value>com.webchatOil.model.LKUserinfo</value>
+                <value>com.webchatOil.model.LKGoodsInfo</value>
+                <value>com.webchatOil.model.LKGoodsPic</value>
             </list>  
         </property> 
     </bean>  
      <bean id="LKUserListDaoImpl" class="com.webchatOil.dao.Impl.LKUserListDaoImpl">
      <property name="hibernateTemplate" ref="hibernateTemplate"></property>
      </bean>
-       
+     
+    <bean id="LKGoodsDaoImpl" class="com.webchatOil.dao.Impl.LKGoodsDaoImpl">
+     <property name="hibernateTemplate" ref="hibernateTemplate"></property>
+     </bean>
+     
     <!-- 配置事务管理 -->  
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
         <property name="sessionFactory" ref="sessionFactory" />  
