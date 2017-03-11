@@ -23,7 +23,10 @@
      <result name="input">/jsp/error.jsp</result> 
      <result name="success">success.jsp</result> 
     </action> 
-   
+  <!-- 推送通知 -->
+     <action name="regsistPushNotification" class="com.webchatOil.action.PushNotificationAction" method="regsistPushNotification">
+      <interceptor-ref name="requestType"/>
+     </action>
  <!-- 微信授权管理  -->
      <action name="doGet" class="com.webchatOil.action.activtiyAction" method="doGet"></action>
      <action name="recAuthAction" class="com.webchatOil.action.activtiyAction" method="recAuthAction"></action>
